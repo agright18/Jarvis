@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JARVIS OS 21.0 - Concise</title>
+<title>JARVIS OS 21.0 - Ultimate</title>
 <script src="https://js.puter.com/v2/"></script>
 <style>
     :root {
@@ -25,7 +25,7 @@
         user-select: none;
     }
 
-    /* ================= BACKGROUND ================= */
+    /* ================= BACKGROUNDS ================= */
     #quantum-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(circle at center, #05101a 0%, #000 100%); }
     .chip-texture {
         position: absolute; inset: 0; z-index: 1;
@@ -35,24 +35,54 @@
         -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
     }
 
-    /* ================= START OVERLAY ================= */
+    /* ================= START OVERLAY (UPDATED) ================= */
     #start-overlay {
         position: fixed; inset: 0; z-index: 5000;
-        background: rgba(0,0,0,0.95);
+        /* Futuristic Grid Background */
+        background-color: #000;
+        background-image: 
+            linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        box-shadow: inset 0 0 100px #000;
         display: flex; flex-direction: column; justify-content: center; align-items: center;
+        transition: opacity 1.5s ease; /* Smooth Fade Out */
+        opacity: 1;
     }
+    
+    /* Moving perspective animation for start screen */
+    #start-overlay::before {
+        content: ''; position: absolute; inset: 0;
+        background: radial-gradient(circle, transparent 20%, #000 90%);
+        pointer-events: none;
+    }
+
     .start-btn {
-        padding: 20px 50px; background: transparent; border: 2px solid var(--cyan);
+        padding: 20px 50px; background: rgba(0,0,0,0.8); border: 2px solid var(--cyan);
         color: var(--cyan); font-size: 24px; cursor: pointer; text-transform: uppercase;
         letter-spacing: 5px; box-shadow: 0 0 30px var(--cyan-dim); transition: 0.3s;
-        font-family: inherit; font-weight: bold;
+        font-family: inherit; font-weight: bold; z-index: 2;
     }
     .start-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 60px var(--cyan); }
 
     /* ================= MAIN INTERFACE ================= */
-    #main-interface { position: absolute; inset: 0; z-index: 100; pointer-events: none; opacity: 0; transition: 1s; }
+    #main-interface { position: absolute; inset: 0; z-index: 100; pointer-events: none; opacity: 0; transition: 2s; }
     .interface-active { opacity: 1 !important; }
-    #hud-frame { position: absolute; inset: 15px; border: 1px solid rgba(0, 243, 255, 0.1); box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8); z-index: 50; }
+    #hud-frame { position: absolute; inset: 15px; border: 1px solid rgba(0, 243, 255, 0.1); box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8); z-index: 50; overflow: hidden; }
+
+    /* === BORDER BEAM ANIMATION === */
+    .beam-line {
+        position: absolute; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); opacity: 0.8;
+    }
+    .beam-top { top: 0; left: 0; width: 100px; height: 3px; animation: beamH 4s linear infinite; }
+    .beam-right { top: 0; right: 0; width: 3px; height: 100px; animation: beamV 4s linear infinite 1s; }
+    .beam-bottom { bottom: 0; right: 0; width: 100px; height: 3px; animation: beamH_rev 4s linear infinite 2s; }
+    .beam-left { bottom: 0; left: 0; width: 3px; height: 100px; animation: beamV_rev 4s linear infinite 3s; }
+
+    @keyframes beamH { 0% { left: -100px; opacity:0; } 50% { opacity:1; } 100% { left: 100%; opacity:0; } }
+    @keyframes beamV { 0% { top: -100px; opacity:0; } 50% { opacity:1; } 100% { top: 100%; opacity:0; } }
+    @keyframes beamH_rev { 0% { right: -100px; opacity:0; } 50% { opacity:1; } 100% { right: 100%; opacity:0; } }
+    @keyframes beamV_rev { 0% { bottom: -100px; opacity:0; } 50% { opacity:1; } 100% { bottom: 100%; opacity:0; } }
 
     /* Profile */
     .profile-container { position: absolute; top: 30px; right: 40px; display: flex; align-items: center; gap: 10px; background: rgba(0, 20, 30, 0.9); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--cyan); box-shadow: 0 0 15px rgba(0,0,0,0.5); pointer-events: auto; }
@@ -93,9 +123,19 @@
     }
     .footer { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 12px; letter-spacing: 5px; z-index: 50; }
 
+    /* === CLOCK (BOTTOM LEFT) === */
+    #live-clock {
+        position: absolute; bottom: 30px; left: 30px;
+        font-size: 24px; color: var(--cyan); font-weight: bold;
+        text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px;
+        border-left: 3px solid var(--cyan); padding-left: 10px;
+        z-index: 60;
+    }
+    #live-clock span { display: block; font-size: 10px; color: #aaa; letter-spacing: 1px; }
+
     /* HOLOGRAPHIC OVERLAY */
     #hologram-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(0, 5, 10, 0.95); backdrop-filter: blur(10px); display: none; opacity: 0; transition: opacity 0.5s ease; justify-content: center; align-items: center; }
-    #hologram-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; /* Changed cursor */ }
+    #hologram-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
     .holo-controls { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; }
     .holo-status { margin-bottom: 10px; font-size: 14px; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px var(--cyan); }
     .close-holo-btn { pointer-events: auto; background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 30px; font-size: 16px; letter-spacing: 3px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-family: inherit; background: rgba(0, 243, 255, 0.1); }
@@ -120,12 +160,22 @@
     <canvas id="hologram-canvas"></canvas>
     <div class="holo-controls">
         <div class="holo-status" id="holoStatus">TOPOLOGY: SPHERE</div>
-        <div style="margin-bottom: 15px; font-size: 10px; color: #aaa;">DRAG TO ROTATE | COMMANDS: "SPHERE", "CUBE", "HELIX"</div>
+        <div style="margin-bottom: 15px; font-size: 10px; color: #aaa;">DRAG TO ROTATE | COMMANDS: "RED", "BLUE", "CUBE"</div>
         <button class="close-holo-btn" onclick="closeHologram()">CLOSE PROJECTION</button>
     </div>
 </div>
 
 <div id="main-interface">
+    <div class="beam-line beam-top"></div>
+    <div class="beam-line beam-right"></div>
+    <div class="beam-line beam-bottom"></div>
+    <div class="beam-line beam-left"></div>
+
+    <div id="live-clock">
+        <div id="clock-time">00:00:00</div>
+        <span>LOCAL SYSTEM TIME</span>
+    </div>
+
     <div id="hud-frame"></div>
 
     <div class="profile-container">
@@ -167,15 +217,33 @@
 
 <script>
     function initSystem() {
-        document.getElementById('start-overlay').style.display = 'none';
+        const overlay = document.getElementById('start-overlay');
+        // Fade out Start Screen
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        
+        // Reveal Main Interface
         document.getElementById('main-interface').classList.add('interface-active');
-        speak("Online.");
+        
+        speak("System Initialized.");
         startVoiceEngine();
         initParticles(); animateBg();
         updateGraph();
+        
+        // Remove overlay from DOM after transition
+        setTimeout(() => { overlay.style.display = 'none'; }, 1500);
     }
 
-    /* ================= VOICE AI (STRICTLY CONCISE) ================= */
+    // === CLOCK FUNCTION ===
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', { hour12: false });
+        document.getElementById('clock-time').innerText = timeString;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    /* ================= VOICE AI ================= */
     let recognition; 
     let isJarvisActive = false;
     const reactor = document.getElementById('reactorCore');
@@ -207,14 +275,18 @@
         // Shape Commands
         if(cmd.includes("sphere")) { setShape('sphere'); return; }
         if(cmd.includes("cube")) { setShape('cube'); return; }
-        if(cmd.includes("helix") || cmd.includes("dna")) { setShape('helix'); return; }
+        if(cmd.includes("helix")) { setShape('helix'); return; }
+        
+        // Color Commands
+        if(cmd.includes("red")) { holoColor = "255, 0, 0"; speak("Color set to Red."); return; }
+        if(cmd.includes("blue") || cmd.includes("cyan")) { holoColor = "0, 243, 255"; speak("Color set to Cyan."); return; }
+        if(cmd.includes("green")) { holoColor = "0, 255, 0"; speak("Color set to Green."); return; }
 
         // AI Brain (Puter.js)
         reactor.className = "reactor thinking";
         
         if (typeof puter !== 'undefined') {
             try {
-                // STRICT PROMPT: FORCE 1 SENTENCE
                 const response = await puter.ai.chat(`You are JARVIS. Answer in ONE short sentence. Maximum 15 words. No markdown. User: ${cmd}`);
                 speak(response?.message?.content || response);
             } catch(e) {
@@ -237,20 +309,19 @@
         window.speechSynthesis.speak(u);
     }
 
-    /* ================= 3D HOLOGRAM (UPDATED) ================= */
+    /* ================= 3D HOLOGRAM ================= */
     const holoCanvas = document.getElementById('hologram-canvas');
     const holoCtx = holoCanvas.getContext('2d');
     const holoOverlay = document.getElementById('hologram-overlay');
     const holoStatus = document.getElementById('holoStatus');
     let holoActive = false; 
     let particles3D = []; 
-    // Auto Rotation + Manual Drag Rotation
     let rotation = { x: 0, y: 0 };
     let targetRotation = { x: 0, y: 0 };
     let isDragging = false;
     let lastMouse = { x: 0, y: 0 };
+    let holoColor = "0, 243, 255"; 
     
-    // Updated Class with Interconnect Logic
     class Point3D {
         constructor() { 
             this.x=0;this.y=0;this.z=0; 
@@ -258,26 +329,22 @@
             this.setSphere(); 
             this.x=this.tx;this.y=this.ty;this.z=this.tz; 
         }
-
         setSphere() { 
             const t=Math.random()*Math.PI*2, p=Math.acos((Math.random()*2)-1), r=220; 
             this.tx=r*Math.sin(p)*Math.cos(t); this.ty=r*Math.sin(p)*Math.sin(t); this.tz=r*Math.cos(p); 
         }
-        
         setCube() { 
             const s=160; 
             this.tx=(Math.random()-0.5)*2*s; this.ty=(Math.random()-0.5)*2*s; this.tz=(Math.random()-0.5)*2*s; 
         }
-
         setHelix() {
-            const i = Math.random() * 20; // height
-            const t = i * 0.5 + Math.PI * (Math.random() > 0.5 ? 0 : 1); // 2 strands
+            const i = Math.random() * 20; 
+            const t = i * 0.5 + Math.PI * (Math.random() > 0.5 ? 0 : 1);
             const r = 100;
             this.tx = r * Math.cos(t * 5);
             this.ty = (i - 10) * 30;
             this.tz = r * Math.sin(t * 5);
         }
-
         update() { 
             this.x+=(this.tx-this.x)*0.05; 
             this.y+=(this.ty-this.y)*0.05; 
@@ -299,7 +366,6 @@
     function initHologram() {
         holoCanvas.width=window.innerWidth; holoCanvas.height=window.innerHeight; 
         particles3D=[];
-        // REDUCED Count to 400 to allow smooth lines
         for(let i=0; i<400; i++) particles3D.push(new Point3D());
     }
 
@@ -309,51 +375,41 @@
         
         const cx=holoCanvas.width/2, cy=holoCanvas.height/2;
         
-        // Smooth rotation
         if(!isDragging) targetRotation.y += 0.005;
         rotation.x += (targetRotation.x - rotation.x) * 0.1;
         rotation.y += (targetRotation.y - rotation.y) * 0.1;
 
         let projected = [];
         
-        // 1. Calculate Positions
         particles3D.forEach(p => {
             p.update();
-            // Rotate Y
             let x1 = p.x*Math.cos(rotation.y) - p.z*Math.sin(rotation.y);
             let z1 = p.z*Math.cos(rotation.y) + p.x*Math.sin(rotation.y);
-            // Rotate X
             let y1 = p.y*Math.cos(rotation.x) - z1*Math.sin(rotation.x);
             let z2 = z1*Math.cos(rotation.x) + p.y*Math.sin(rotation.x);
-
             let scale = 400/(400+z2);
             projected.push({x:cx+x1*scale, y:cy+y1*scale, z:z2, s:scale});
         });
 
-        // 2. Draw Connections (The Network Effect)
         holoCtx.lineWidth = 0.5;
         for (let i = 0; i < projected.length; i++) {
             let p1 = projected[i];
-            // Only draw dots if they are "in front" (rough occlusion)
             if(p1.s < 0.2) continue;
 
-            // Draw Dot
             holoCtx.beginPath();
-            holoCtx.fillStyle = `rgba(0,243,255,${p1.s})`;
+            holoCtx.fillStyle = `rgba(${holoColor},${p1.s})`;
             holoCtx.arc(p1.x, p1.y, 2*p1.s, 0, Math.PI*2);
             holoCtx.fill();
 
-            // Connect Neighbors
             for (let j = i + 1; j < projected.length; j++) {
                 let p2 = projected[j];
                 let dx = p1.x - p2.x;
                 let dy = p1.y - p2.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                // If close enough and both are visible
                 if (dist < 40 * p1.s) {
                     holoCtx.beginPath();
-                    holoCtx.strokeStyle = `rgba(0,243,255,${0.3 * p1.s})`; // Fade lines based on depth
+                    holoCtx.strokeStyle = `rgba(${holoColor},${0.3 * p1.s})`; 
                     holoCtx.moveTo(p1.x, p1.y);
                     holoCtx.lineTo(p2.x, p2.y);
                     holoCtx.stroke();
@@ -363,7 +419,6 @@
         requestAnimationFrame(animateHologram);
     }
 
-    // Mouse Controls for Hologram
     holoCanvas.addEventListener('mousedown', e => { isDragging=true; lastMouse={x:e.clientX, y:e.clientY}; });
     window.addEventListener('mouseup', () => isDragging=false );
     window.addEventListener('mousemove', e => {
