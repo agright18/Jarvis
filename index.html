@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JARVIS OS - Mark 85</title>
+<title>JARVIS OS - Mark 85 (Refined)</title>
 <script src="https://js.puter.com/v2/"></script>
 <style>
     /* ================= CORE STYLES ================= */
@@ -329,25 +329,41 @@
         setCube() { const s=160; this.tx=(Math.random()-0.5)*2*s; this.ty=(Math.random()-0.5)*2*s; this.tz=(Math.random()-0.5)*2*s; }
         setHelix() { const i = Math.random() * 20; const t = i * 0.5 + Math.PI * (Math.random() > 0.5 ? 0 : 1); const r = 100; this.tx = r * Math.cos(t * 5); this.ty = (i - 10) * 30; this.tz = r * Math.sin(t * 5); }
         
-        // --- IRON MAN SHAPE APPROXIMATION ---
+        // --- REFINED IRON MAN SHAPE ---
         setIronMan() {
-            // Generates a "Head" shape: Sphere top, flat face, tapered jaw
-            const t = Math.random() * Math.PI * 2;
-            const p = Math.acos((Math.random() * 2) - 1);
-            let r = 200;
+            // Assign particles to distinct regions to form a recognizable head
+            const rand = Math.random();
+            let x, y, z;
             
-            let x = r * Math.sin(p) * Math.cos(t);
-            let y = r * Math.sin(p) * Math.sin(t);
-            let z = r * Math.cos(p);
-            
-            // Flatten Face (Front is +Z)
-            if(z > 50 && y > -100 && y < 100 && x > -80 && x < 80) {
-                z = 50 + Math.random()*5; // Flat face plate
-            }
-            // Taper Jaw (Bottom Y > 50)
-            if(y > 50) {
-                x *= 0.6; // Narrow sides
-                if(z > 0) z += (y-50)*0.5; // Jut chin out slightly
+            if (rand < 0.4) {
+                // 1. Faceplate (Flat shield shape)
+                let w = (Math.random() - 0.5) * 160;
+                let h = (Math.random() - 0.5) * 200;
+                // Taper the bottom (chin area)
+                if (h > 50) w *= 0.6; 
+                x = w;
+                y = h;
+                z = 100 + Math.random() * 10; // Push forward
+            } else if (rand < 0.75) {
+                // 2. Cranium (Back of head - Sphere)
+                let t = Math.random() * Math.PI * 2;
+                let p = Math.acos((Math.random() * 2) - 1);
+                let r = 180;
+                x = r * Math.sin(p) * Math.cos(t);
+                y = r * Math.sin(p) * Math.sin(t);
+                z = r * Math.cos(p);
+                // Cut off the front to let the faceplate sit there
+                if (z > 50) z = 50; 
+            } else if (rand < 0.9) {
+                // 3. Jawline (Squared off)
+                x = (Math.random() - 0.5) * 180;
+                y = 100 + Math.random() * 40; // Bottom area
+                z = 50 + Math.random() * 50; // Side depth
+            } else {
+                // 4. Eyes (Slits)
+                x = (Math.random() > 0.5 ? 40 : -40) + (Math.random()-0.5)*30; // Left or Right
+                y = -20 + (Math.random()-0.5)*10;
+                z = 115; // Slightly in front of faceplate
             }
             
             this.tx = x; this.ty = y; this.tz = z;
@@ -370,7 +386,8 @@
 
     function initHologram() {
         holoCanvas.width=window.innerWidth; holoCanvas.height=window.innerHeight; particles3D=[];
-        for(let i=0; i<450; i++) particles3D.push(new Point3D());
+        // Increased particle count for better definition
+        for(let i=0; i<800; i++) particles3D.push(new Point3D());
     }
 
     function animateHologram() {
@@ -397,7 +414,7 @@
             for (let j = i + 1; j < projected.length; j++) {
                 let p2 = projected[j];
                 let dx = p1.x - p2.x; let dy = p1.y - p2.y; let dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist < 40 * p1.s) { holoCtx.beginPath(); holoCtx.strokeStyle = `rgba(${holoColor},${0.3 * p1.s})`; holoCtx.moveTo(p1.x, p1.y); holoCtx.lineTo(p2.x, p2.y); holoCtx.stroke(); }
+                if (dist < 30 * p1.s) { holoCtx.beginPath(); holoCtx.strokeStyle = `rgba(${holoColor},${0.3 * p1.s})`; holoCtx.moveTo(p1.x, p1.y); holoCtx.lineTo(p2.x, p2.y); holoCtx.stroke(); }
             }
         }
         requestAnimationFrame(animateHologram);
