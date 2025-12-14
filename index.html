@@ -2,90 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JARVIS OS - Ultimate</title>
+<title>JARVIS OS - App Launcher</title>
 <script src="https://js.puter.com/v2/"></script>
 <style>
-    :root {
-        --cyan: #00f3ff;
-        --cyan-dim: rgba(0, 243, 255, 0.1);
-        --bg-color: #020408;
-        --panel-bg: rgba(5, 10, 16, 0.85);
-        --danger: #ff3333;
-        --success: #33ff33;
-    }
-
-    body {
-        margin: 0;
-        background-color: var(--bg-color);
-        font-family: "Consolas", "Courier New", monospace;
-        overflow: hidden;
-        height: 100vh;
-        color: var(--cyan);
-        text-shadow: 0 0 5px var(--cyan);
-        user-select: none;
-    }
-
-    /* ================= BACKGROUNDS ================= */
+    /* ... (All Previous CSS Styles Remain the Same) ... */
+    :root { --cyan: #00f3ff; --cyan-dim: rgba(0, 243, 255, 0.1); --bg-color: #020408; --panel-bg: rgba(5, 10, 16, 0.85); --danger: #ff3333; --success: #33ff33; }
+    body { margin: 0; background-color: var(--bg-color); font-family: "Consolas", "Courier New", monospace; overflow: hidden; height: 100vh; color: var(--cyan); text-shadow: 0 0 5px var(--cyan); user-select: none; }
     #quantum-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(circle at center, #05101a 0%, #000 100%); }
-    .chip-texture {
-        position: absolute; inset: 0; z-index: 1;
-        background-image: linear-gradient(rgba(0, 243, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.15) 1px, transparent 1px);
-        background-size: 50px 50px; pointer-events: none;
-        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-    }
-
-    /* ================= START OVERLAY ================= */
-    #start-overlay {
-        position: fixed; inset: 0; z-index: 5000;
-        background-color: #000;
-        background-image: 
-            linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px);
-        background-size: 40px 40px;
-        box-shadow: inset 0 0 100px #000;
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-        transition: opacity 1.5s ease;
-        opacity: 1;
-    }
-    
-    #start-overlay::before {
-        content: ''; position: absolute; inset: 0;
-        background: radial-gradient(circle, transparent 20%, #000 90%);
-        pointer-events: none;
-    }
-
-    .start-btn {
-        padding: 20px 50px; background: rgba(0,0,0,0.8); border: 2px solid var(--cyan);
-        color: var(--cyan); font-size: 24px; cursor: pointer; text-transform: uppercase;
-        letter-spacing: 5px; box-shadow: 0 0 30px var(--cyan-dim); transition: 0.3s;
-        font-family: inherit; font-weight: bold; z-index: 2;
-    }
+    .chip-texture { position: absolute; inset: 0; z-index: 1; background-image: linear-gradient(rgba(0, 243, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.15) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%); }
+    #start-overlay { position: fixed; inset: 0; z-index: 5000; background-color: #000; background-image: linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px); background-size: 40px 40px; box-shadow: inset 0 0 100px #000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1.5s ease; opacity: 1; }
+    #start-overlay::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 90%); pointer-events: none; }
+    .start-btn { padding: 20px 50px; background: rgba(0,0,0,0.8); border: 2px solid var(--cyan); color: var(--cyan); font-size: 24px; cursor: pointer; text-transform: uppercase; letter-spacing: 5px; box-shadow: 0 0 30px var(--cyan-dim); transition: 0.3s; font-family: inherit; font-weight: bold; z-index: 2; }
     .start-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 60px var(--cyan); }
-
-    /* ================= MAIN INTERFACE ================= */
     #main-interface { position: absolute; inset: 0; z-index: 100; pointer-events: none; opacity: 0; transition: 2s; }
     .interface-active { opacity: 1 !important; }
     #hud-frame { position: absolute; inset: 15px; border: 1px solid rgba(0, 243, 255, 0.1); box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8); z-index: 50; overflow: hidden; }
-
-    /* === BORDER BEAMS === */
     .beam-line { position: absolute; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); opacity: 0.8; }
     .beam-top { top: 0; left: 0; width: 100px; height: 3px; animation: beamH 4s linear infinite; }
     .beam-right { top: 0; right: 0; width: 3px; height: 100px; animation: beamV 4s linear infinite 1s; }
     .beam-bottom { bottom: 0; right: 0; width: 100px; height: 3px; animation: beamH_rev 4s linear infinite 2s; }
     .beam-left { bottom: 0; left: 0; width: 3px; height: 100px; animation: beamV_rev 4s linear infinite 3s; }
-
     @keyframes beamH { 0% { left: -100px; opacity:0; } 50% { opacity:1; } 100% { left: 100%; opacity:0; } }
     @keyframes beamV { 0% { top: -100px; opacity:0; } 50% { opacity:1; } 100% { top: 100%; opacity:0; } }
     @keyframes beamH_rev { 0% { right: -100px; opacity:0; } 50% { opacity:1; } 100% { right: 100%; opacity:0; } }
     @keyframes beamV_rev { 0% { bottom: -100px; opacity:0; } 50% { opacity:1; } 100% { bottom: 100%; opacity:0; } }
-
-    /* Profile */
     .profile-container { position: absolute; top: 30px; right: 40px; display: flex; align-items: center; gap: 10px; background: rgba(0, 20, 30, 0.9); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--cyan); box-shadow: 0 0 15px rgba(0,0,0,0.5); pointer-events: auto; }
     .username { font-weight: bold; font-size: 12px; letter-spacing: 1px; }
     .profile-img { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--cyan); object-fit: cover; }
-
-    /* Core */
     .core-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; height: 450px; display: flex; justify-content: center; align-items: center; cursor: pointer; pointer-events: auto; }
     .ring-ticks { position: absolute; width: 420px; height: 420px; border-radius: 50%; border: 1px dashed rgba(0, 243, 255, 0.2); animation: rotateRight 80s linear infinite; pointer-events: none; }
     .ring-segmented { position: absolute; width: 340px; height: 340px; border-radius: 50%; border: 2px solid transparent; border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); animation: rotateLeft 30s linear infinite; pointer-events: none; }
@@ -94,52 +37,28 @@
     .reactor:hover .reactor-glow { box-shadow: 0 0 80px var(--cyan); transform: scale(1.1); background: #fff; }
     .reactor-svg { position: absolute; width: 100%; height: 100%; animation: rotateLeft 10s linear infinite; }
     .reactor-glow { position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, #fff 0%, var(--cyan) 50%, transparent 80%); border-radius: 50%; box-shadow: 0 0 50px var(--cyan); animation: pulseCore 2s ease-in-out infinite; transition: 0.3s; }
-    
     .speaking .reactor-glow { box-shadow: 0 0 100px var(--cyan), 0 0 80px white; transform: scale(1.3); }
     .thinking .reactor-glow { background: radial-gradient(circle, #fff 0%, var(--danger) 50%, transparent 80%); box-shadow: 0 0 80px var(--danger); animation: pulseCore 0.2s infinite; }
-
-    /* Panels */
     .panel { position: absolute; width: 260px; padding: 15px; background: var(--panel-bg); border: 1px solid var(--cyan); box-shadow: 0 0 20px rgba(0,0,0,0.8); backdrop-filter: blur(8px); pointer-events: auto; }
     .panel h3 { margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid var(--cyan-dim); letter-spacing: 2px; }
     .stat-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
     .left { top: 40%; left: 5%; transform: translateY(-50%); }
     .right { top: 40%; right: 5%; transform: translateY(-50%); }
     .graph-box { margin-top: 10px; height: 80px; width: 100%; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--cyan-dim); }
-    
-    /* VISUALIZER BARS */
     .bar-box { display: flex; align-items: flex-end; justify-content: space-between; gap: 2px; }
     .bar { width: 100%; background: var(--cyan); opacity: 0.9; min-height: 2px; height: 5%; transition: height 0.05s ease; }
-    
     svg { width: 100%; height: 100%; display: block; }
     polyline { fill: none; stroke: var(--cyan); stroke-width: 2; vector-effect: non-scaling-stroke; }
-
-    /* Transcript (The Text Box) */
-    #transcript { 
-        position: absolute; bottom: 80px; width: 60%; left: 20%; 
-        text-align: center; font-size: 18px; color: #fff; 
-        text-shadow: 0 0 5px var(--cyan); font-style: italic;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+    #transcript { position: absolute; bottom: 80px; width: 60%; left: 20%; text-align: center; font-size: 18px; color: #fff; text-shadow: 0 0 5px var(--cyan); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .footer { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 12px; letter-spacing: 5px; z-index: 50; }
-
-    /* Live Clock */
-    #live-clock {
-        position: absolute; bottom: 30px; left: 30px;
-        font-size: 24px; color: var(--cyan); font-weight: bold;
-        text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px;
-        border-left: 3px solid var(--cyan); padding-left: 10px;
-        z-index: 60;
-    }
+    #live-clock { position: absolute; bottom: 30px; left: 30px; font-size: 24px; color: var(--cyan); font-weight: bold; text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px; border-left: 3px solid var(--cyan); padding-left: 10px; z-index: 60; }
     #live-clock span { display: block; font-size: 10px; color: #aaa; letter-spacing: 1px; }
-
-    /* HOLOGRAPHIC OVERLAY */
     #hologram-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(0, 5, 10, 0.95); backdrop-filter: blur(10px); display: none; opacity: 0; transition: opacity 0.5s ease; justify-content: center; align-items: center; }
     #hologram-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
     .holo-controls { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; }
     .holo-status { margin-bottom: 10px; font-size: 14px; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px var(--cyan); }
     .close-holo-btn { pointer-events: auto; background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 30px; font-size: 16px; letter-spacing: 3px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-family: inherit; background: rgba(0, 243, 255, 0.1); }
     .close-holo-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
-
     @keyframes rotateRight { 100% { transform: rotate(360deg); } }
     @keyframes rotateLeft { 100% { transform: rotate(-360deg); } }
     @keyframes pulseCore { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
@@ -206,8 +125,7 @@
         <h3>ENV METRICS</h3>
         <div class="stat-row"><span>TEMP</span><span id="weather-temp">SCANNING...</span></div>
         <div class="stat-row"><span>WIND</span><span id="weather-wind">...</span></div>
-        <div class="graph-box bar-box" id="visualizer-container">
-            </div>
+        <div class="graph-box bar-box" id="visualizer-container"></div>
     </div>
 
     <div id="transcript">System Standby</div>
@@ -227,8 +145,8 @@
         initParticles(); 
         animateBg();
         updateGraph();
-        initWeather(); // Start Weather (Hardcoded)
-        initAudioVisualizer(); // Start Visualizer
+        initWeather(); 
+        initAudioVisualizer(); 
         
         setTimeout(() => { overlay.style.display = 'none'; }, 1500);
     }
@@ -241,9 +159,8 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* ================= WEATHER API (HARDCODED BAREILLY) ================= */
+    /* ================= WEATHER API (BAREILLY) ================= */
     function initWeather() {
-        // COORDINATES FOR BAREILLY, UP
         const lat = 28.3670;
         const lon = 79.4304;
         
@@ -261,19 +178,15 @@
             });
     }
 
-    /* ================= MUSIC VISUALIZER (Web Audio API) ================= */
+    /* ================= MUSIC VISUALIZER ================= */
     let audioCtx, analyser, dataArray, bufferLength;
-    
     function initAudioVisualizer() {
         const container = document.getElementById('visualizer-container');
-        // Create 16 bars
         for (let i = 0; i < 16; i++) {
             const bar = document.createElement('div');
             bar.className = 'bar';
             container.appendChild(bar);
         }
-
-        // Request Mic Access
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -300,13 +213,12 @@
             let percent = (val / 255) * 100;
             if (percent < 5) percent = 5; 
             bars[i].style.height = percent + "%";
-            
             if(percent > 80) bars[i].style.background = "#fff";
             else bars[i].style.background = "var(--cyan)";
         }
     }
 
-    /* ================= VOICE AI ================= */
+    /* ================= VOICE AI COMMANDS ================= */
     let recognition; 
     let isJarvisActive = false;
     const reactor = document.getElementById('reactorCore');
@@ -326,22 +238,56 @@
         recognition.start();
     }
 
+    // === COMMAND PROCESSOR ===
     async function processCommand(cmd) {
         window.speechSynthesis.cancel();
         
+        // --- APP OPENING LOGIC ---
+        if(cmd.includes("open spotify")) {
+            speak("Opening Spotify.");
+            window.open("https://open.spotify.com", "_blank");
+            return;
+        }
+        if(cmd.includes("open whatsapp")) {
+            speak("Opening WhatsApp.");
+            window.open("https://web.whatsapp.com", "_blank");
+            return;
+        }
+        if(cmd.includes("open youtube")) {
+            speak("Opening YouTube.");
+            window.open("https://www.youtube.com", "_blank");
+            return;
+        }
+        if(cmd.includes("open instagram")) {
+            speak("Opening Instagram.");
+            window.open("https://www.instagram.com", "_blank");
+            return;
+        }
+        if(cmd.includes("open calculator")) {
+            speak("Opening Calculator.");
+            window.open("https://www.google.com/search?q=calculator", "_blank");
+            return;
+        }
+        // General Search (e.g. "Search for Iron Man")
+        if(cmd.startsWith("search for")) {
+            const query = cmd.replace("search for", "").trim();
+            speak("Searching for " + query);
+            window.open(`https://www.google.com/search?q=${query}`, "_blank");
+            return;
+        }
+
+        // --- EXISTING COMMANDS ---
         if(cmd.includes("time")) { speak("It is " + new Date().toLocaleTimeString()); return; }
-        if(cmd.includes("open google")) { speak("Opening Google"); window.open("https://google.com"); return; }
         if(cmd.includes("open hologram")) { openHologram(); return; }
         if(cmd.includes("close hologram")) { closeHologram(); return; }
-        
         if(cmd.includes("sphere")) { setShape('sphere'); return; }
         if(cmd.includes("cube")) { setShape('cube'); return; }
         if(cmd.includes("helix")) { setShape('helix'); return; }
-        
         if(cmd.includes("red")) { holoColor = "255, 0, 0"; speak("Color set to Red."); return; }
         if(cmd.includes("blue") || cmd.includes("cyan")) { holoColor = "0, 243, 255"; speak("Color set to Cyan."); return; }
         if(cmd.includes("green")) { holoColor = "0, 255, 0"; speak("Color set to Green."); return; }
 
+        // --- AI BRAIN (Puter.js) ---
         reactor.className = "reactor thinking";
         
         if (typeof puter !== 'undefined') {
@@ -457,7 +403,6 @@
         requestAnimationFrame(animateBg);
     }
 
-    // CPU Line Chart (Fake Data)
     const lineChart = document.getElementById('lineChart'); let dataPoints=new Array(30).fill(50);
     function updateGraph() {
         dataPoints.shift(); let v=dataPoints[dataPoints.length-1]+(Math.random()-0.5)*30; 
