@@ -2,445 +2,1394 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JARVIS OS - App Launcher</title>
-<script src="https://js.puter.com/v2/"></script><meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#ffffff">
-    
-    <title>Import House | Premium Global Fashion & Streetwear</title>
-    
-    <meta name="description" content="Import House is the world's leading destination for premium streetwear, luxury fashion, and vintage denim. Shop Nike, Adidas, Levis, and more.">
-    
-    <meta name="keywords" content="Import House, Fashion, Streetwear, Nike, Adidas, Vintage Clothing, Online Store India, Premium Clothes">
-    
-    <meta property="og:title" content="Import House | Winter Edition">
-    <meta property="og:description" content="Design your aesthetic with premium global brands.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1548624313-0396c75e4b1a?auto=format&fit=crop&w=1200&q=80">
-    <meta property="og:type" content="website">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { brand: '#000000' },
-                    height: { 'screen-dvh': '100dvh' },
-                    minHeight: { 'screen-dvh': '100dvh' }
-                }
-            }
-        }
-    </script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>J.A.R.V.I.S — Mark VII</title>
+<script src="https://js.puter.com/v2/"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <style>
-    /* ... (All Previous CSS Styles Remain the Same) ... */
-    :root { --cyan: #00f3ff; --cyan-dim: rgba(0, 243, 255, 0.1); --bg-color: #020408; --panel-bg: rgba(5, 10, 16, 0.85); --danger: #ff3333; --success: #33ff33; }
-    body { margin: 0; background-color: var(--bg-color); font-family: "Consolas", "Courier New", monospace; overflow: hidden; height: 100vh; color: var(--cyan); text-shadow: 0 0 5px var(--cyan); user-select: none; }
-    #quantum-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: radial-gradient(circle at center, #05101a 0%, #000 100%); }
-    .chip-texture { position: absolute; inset: 0; z-index: 1; background-image: linear-gradient(rgba(0, 243, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.15) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%); }
-    #start-overlay { position: fixed; inset: 0; z-index: 5000; background-color: #000; background-image: linear-gradient(rgba(0, 243, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.1) 1px, transparent 1px); background-size: 40px 40px; box-shadow: inset 0 0 100px #000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1.5s ease; opacity: 1; }
-    #start-overlay::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 90%); pointer-events: none; }
-    .start-btn { padding: 20px 50px; background: rgba(0,0,0,0.8); border: 2px solid var(--cyan); color: var(--cyan); font-size: 24px; cursor: pointer; text-transform: uppercase; letter-spacing: 5px; box-shadow: 0 0 30px var(--cyan-dim); transition: 0.3s; font-family: inherit; font-weight: bold; z-index: 2; }
-    .start-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 60px var(--cyan); }
-    #main-interface { position: absolute; inset: 0; z-index: 100; pointer-events: none; opacity: 0; transition: 2s; }
-    .interface-active { opacity: 1 !important; }
-    #hud-frame { position: absolute; inset: 15px; border: 1px solid rgba(0, 243, 255, 0.1); box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8); z-index: 50; overflow: hidden; }
-    .beam-line { position: absolute; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); opacity: 0.8; }
-    .beam-top { top: 0; left: 0; width: 100px; height: 3px; animation: beamH 4s linear infinite; }
-    .beam-right { top: 0; right: 0; width: 3px; height: 100px; animation: beamV 4s linear infinite 1s; }
-    .beam-bottom { bottom: 0; right: 0; width: 100px; height: 3px; animation: beamH_rev 4s linear infinite 2s; }
-    .beam-left { bottom: 0; left: 0; width: 3px; height: 100px; animation: beamV_rev 4s linear infinite 3s; }
-    @keyframes beamH { 0% { left: -100px; opacity:0; } 50% { opacity:1; } 100% { left: 100%; opacity:0; } }
-    @keyframes beamV { 0% { top: -100px; opacity:0; } 50% { opacity:1; } 100% { top: 100%; opacity:0; } }
-    @keyframes beamH_rev { 0% { right: -100px; opacity:0; } 50% { opacity:1; } 100% { right: 100%; opacity:0; } }
-    @keyframes beamV_rev { 0% { bottom: -100px; opacity:0; } 50% { opacity:1; } 100% { bottom: 100%; opacity:0; } }
-    .profile-container { position: absolute; top: 30px; right: 40px; display: flex; align-items: center; gap: 10px; background: rgba(0, 20, 30, 0.9); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--cyan); box-shadow: 0 0 15px rgba(0,0,0,0.5); pointer-events: auto; }
-    .username { font-weight: bold; font-size: 12px; letter-spacing: 1px; }
-    .profile-img { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--cyan); object-fit: cover; }
-    .core-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; height: 450px; display: flex; justify-content: center; align-items: center; cursor: pointer; pointer-events: auto; }
-    .ring-ticks { position: absolute; width: 420px; height: 420px; border-radius: 50%; border: 1px dashed rgba(0, 243, 255, 0.2); animation: rotateRight 80s linear infinite; pointer-events: none; }
-    .ring-segmented { position: absolute; width: 340px; height: 340px; border-radius: 50%; border: 2px solid transparent; border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); animation: rotateLeft 30s linear infinite; pointer-events: none; }
-    .ring-inner { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 5px dotted rgba(0, 243, 255, 0.4); animation: rotateRight 15s linear infinite; pointer-events: none; }
-    .reactor { position: absolute; width: 140px; height: 140px; display: flex; justify-content: center; align-items: center; transition: 0.3s; z-index: 60; }
-    .reactor:hover .reactor-glow { box-shadow: 0 0 80px var(--cyan); transform: scale(1.1); background: #fff; }
-    .reactor-svg { position: absolute; width: 100%; height: 100%; animation: rotateLeft 10s linear infinite; }
-    .reactor-glow { position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, #fff 0%, var(--cyan) 50%, transparent 80%); border-radius: 50%; box-shadow: 0 0 50px var(--cyan); animation: pulseCore 2s ease-in-out infinite; transition: 0.3s; }
-    .speaking .reactor-glow { box-shadow: 0 0 100px var(--cyan), 0 0 80px white; transform: scale(1.3); }
-    .thinking .reactor-glow { background: radial-gradient(circle, #fff 0%, var(--danger) 50%, transparent 80%); box-shadow: 0 0 80px var(--danger); animation: pulseCore 0.2s infinite; }
-    .panel { position: absolute; width: 260px; padding: 15px; background: var(--panel-bg); border: 1px solid var(--cyan); box-shadow: 0 0 20px rgba(0,0,0,0.8); backdrop-filter: blur(8px); pointer-events: auto; }
-    .panel h3 { margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid var(--cyan-dim); letter-spacing: 2px; }
-    .stat-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
-    .left { top: 40%; left: 5%; transform: translateY(-50%); }
-    .right { top: 40%; right: 5%; transform: translateY(-50%); }
-    .graph-box { margin-top: 10px; height: 80px; width: 100%; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--cyan-dim); }
-    .bar-box { display: flex; align-items: flex-end; justify-content: space-between; gap: 2px; }
-    .bar { width: 100%; background: var(--cyan); opacity: 0.9; min-height: 2px; height: 5%; transition: height 0.05s ease; }
-    svg { width: 100%; height: 100%; display: block; }
-    polyline { fill: none; stroke: var(--cyan); stroke-width: 2; vector-effect: non-scaling-stroke; }
-    #transcript { position: absolute; bottom: 80px; width: 60%; left: 20%; text-align: center; font-size: 18px; color: #fff; text-shadow: 0 0 5px var(--cyan); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .footer { position: absolute; bottom: 30px; width: 100%; text-align: center; font-size: 12px; letter-spacing: 5px; z-index: 50; }
-    #live-clock { position: absolute; bottom: 30px; left: 30px; font-size: 24px; color: var(--cyan); font-weight: bold; text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px; border-left: 3px solid var(--cyan); padding-left: 10px; z-index: 60; }
-    #live-clock span { display: block; font-size: 10px; color: #aaa; letter-spacing: 1px; }
-    #hologram-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(0, 5, 10, 0.95); backdrop-filter: blur(10px); display: none; opacity: 0; transition: opacity 0.5s ease; justify-content: center; align-items: center; }
-    #hologram-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: move; }
-    .holo-controls { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; }
-    .holo-status { margin-bottom: 10px; font-size: 14px; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px var(--cyan); }
-    .close-holo-btn { pointer-events: auto; background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 30px; font-size: 16px; letter-spacing: 3px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-family: inherit; background: rgba(0, 243, 255, 0.1); }
-    .close-holo-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
-    @keyframes rotateRight { 100% { transform: rotate(360deg); } }
-    @keyframes rotateLeft { 100% { transform: rotate(-360deg); } }
-    @keyframes pulseCore { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&display=swap');
+ 
+:root {
+  --c: #00d4ff;
+  --c2: #0099cc;
+  --c3: rgba(0,212,255,0.08);
+  --red: #ff3a3a;
+  --amber: #ffaa00;
+  --green: #00ff88;
+  --bg: #010810;
+  --panel: rgba(0,18,36,0.88);
+  --glow: 0 0 20px rgba(0,212,255,0.4), 0 0 60px rgba(0,212,255,0.15);
+  --glow2: 0 0 8px rgba(0,212,255,0.6);
+  --font: 'Orbitron', monospace;
+  --mono: 'Share Tech Mono', monospace;
+}
+ 
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); }
+ 
+body {
+  font-family: var(--mono);
+  color: var(--c);
+  user-select: none;
+  cursor: crosshair;
+}
+ 
+/* ====== BOOT SCREEN ====== */
+#boot {
+  position: fixed; inset: 0; z-index: 9000;
+  background: #000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 32px;
+  transition: opacity 1.8s ease;
+}
+ 
+#boot::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.03) 2px, rgba(0,212,255,0.03) 4px);
+  pointer-events: none;
+}
+ 
+.boot-logo {
+  font-family: var(--font);
+  font-size: clamp(32px, 6vw, 72px);
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--c);
+  text-shadow: 0 0 40px var(--c), 0 0 80px rgba(0,212,255,0.3);
+  animation: logoFlicker 3s ease-in-out infinite;
+}
+ 
+@keyframes logoFlicker {
+  0%,100% { opacity:1; text-shadow: 0 0 40px var(--c), 0 0 80px rgba(0,212,255,0.3); }
+  92% { opacity:1; }
+  93% { opacity:0.4; }
+  94% { opacity:1; }
+  97% { opacity:1; }
+  98% { opacity:0.6; }
+  99% { opacity:1; }
+}
+ 
+.boot-sub {
+  font-size: clamp(9px, 1.2vw, 13px);
+  letter-spacing: 0.5em;
+  color: rgba(0,212,255,0.5);
+  text-transform: uppercase;
+}
+ 
+.boot-bar-wrap {
+  width: min(400px, 80vw);
+  height: 2px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+ 
+.boot-bar {
+  height: 100%;
+  background: var(--c);
+  box-shadow: 0 0 12px var(--c);
+  width: 0%;
+  transition: width 0.05s linear;
+}
+ 
+.boot-status {
+  font-size: 11px;
+  color: rgba(0,212,255,0.4);
+  letter-spacing: 0.2em;
+  height: 16px;
+}
+ 
+.boot-btn {
+  margin-top: 16px;
+  padding: 14px 52px;
+  background: transparent;
+  border: 1px solid var(--c);
+  color: var(--c);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: var(--glow);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+ 
+.boot-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.15), transparent);
+  transition: left 0.5s;
+}
+.boot-btn:hover::before { left: 100%; }
+.boot-btn:hover { background: rgba(0,212,255,0.1); box-shadow: 0 0 40px rgba(0,212,255,0.6), 0 0 80px rgba(0,212,255,0.2); letter-spacing: 0.6em; }
+ 
+/* ====== MAIN HUD ====== */
+#hud {
+  position: fixed; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 2s ease;
+}
+#hud.live { opacity:1; pointer-events: auto; }
+ 
+/* Canvas layers */
+#bg-canvas, #radar-canvas { position: absolute; inset: 0; }
+#bg-canvas { z-index: 1; }
+#radar-canvas { z-index: 2; }
+ 
+/* Scanline overlay */
+.scanlines {
+  position: absolute; inset: 0; z-index: 3;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.08) 3px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+}
+ 
+/* Vignette */
+.vignette {
+  position: absolute; inset: 0; z-index: 4;
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+}
+ 
+/* ====== FRAME CORNERS ====== */
+.frame {
+  position: absolute; inset: 20px; z-index: 10;
+  pointer-events: none;
+}
+.corner {
+  position: absolute;
+  width: 50px; height: 50px;
+  border-color: var(--c);
+  border-style: solid;
+  opacity: 0.7;
+}
+.corner.tl { top:0; left:0; border-width: 2px 0 0 2px; }
+.corner.tr { top:0; right:0; border-width: 2px 2px 0 0; }
+.corner.bl { bottom:0; left:0; border-width: 0 0 2px 2px; }
+.corner.br { bottom:0; right:0; border-width: 0 2px 2px 0; }
+.corner::after {
+  content: '';
+  position: absolute;
+  background: var(--c);
+  box-shadow: 0 0 6px var(--c);
+}
+.corner.tl::after, .corner.tr::after { top: -1px; height:2px; width:8px; }
+.corner.tl::after { left:0; }
+.corner.tr::after { right:0; }
+.corner.bl::after, .corner.br::after { bottom:-1px; height:2px; width:8px; }
+.corner.bl::after { left:0; }
+.corner.br::after { right:0; }
+ 
+/* Sweep beam */
+.sweep-h {
+  position: absolute; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent 0%, var(--c) 50%, transparent 100%);
+  opacity: 0; box-shadow: 0 0 8px var(--c);
+  animation: sweepH 6s linear infinite;
+}
+.sweep-v {
+  position: absolute; top:0; bottom:0; width:1px;
+  background: linear-gradient(180deg, transparent 0%, var(--c) 50%, transparent 100%);
+  opacity: 0; box-shadow: 0 0 8px var(--c);
+  animation: sweepV 9s linear infinite 3s;
+}
+@keyframes sweepH {
+  0% { top:-2px; opacity:0; }
+  5% { opacity:0.6; }
+  95% { opacity:0.6; }
+  100% { top:100%; opacity:0; }
+}
+@keyframes sweepV {
+  0% { left:-2px; opacity:0; }
+  5% { opacity:0.4; }
+  95% { opacity:0.4; }
+  100% { left:100%; opacity:0; }
+}
+ 
+/* ====== CLOCK / DATE ====== */
+#clock-block {
+  position: absolute; bottom: 40px; left: 50px; z-index: 50;
+}
+#clock-time {
+  font-family: var(--font);
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--c);
+  text-shadow: var(--glow2);
+  line-height: 1;
+}
+#clock-date {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: rgba(0,212,255,0.5);
+  margin-top: 4px;
+}
+ 
+/* ====== PROFILE ====== */
+#profile {
+  position: absolute; top: 35px; right: 50px; z-index: 50;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--panel);
+  border: 1px solid rgba(0,212,255,0.25);
+  padding: 8px 18px 8px 10px;
+  backdrop-filter: blur(12px);
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  box-shadow: var(--glow);
+}
+.profile-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--c);
+  box-shadow: 0 0 12px rgba(0,212,255,0.5);
+}
+.profile-name {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-shadow: var(--glow2);
+}
+.profile-role {
+  font-size: 9px;
+  color: rgba(0,212,255,0.5);
+  letter-spacing: 0.15em;
+  margin-top: 2px;
+}
+ 
+/* ====== CENTER CORE ====== */
+#core-wrap {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  display: flex; align-items: center; justify-content: center;
+}
+ 
+#core-canvas {
+  cursor: pointer;
+  filter: drop-shadow(0 0 20px rgba(0,212,255,0.4));
+  transition: filter 0.3s;
+}
+#core-canvas:hover {
+  filter: drop-shadow(0 0 40px rgba(0,212,255,0.8));
+}
+ 
+/* ====== PANELS ====== */
+.panel {
+  position: absolute; z-index: 40;
+  width: clamp(200px, 18vw, 270px);
+  background: var(--panel);
+  border: 1px solid rgba(0,212,255,0.2);
+  backdrop-filter: blur(16px);
+  padding: 16px;
+  box-shadow: var(--glow), inset 0 0 20px rgba(0,212,255,0.03);
+}
+.panel::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--c), transparent);
+  opacity: 0.5;
+}
+.panel-title {
+  font-family: var(--font);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: rgba(0,212,255,0.6);
+  border-bottom: 1px solid rgba(0,212,255,0.1);
+  padding-bottom: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.panel-title::before {
+  content: '';
+  width: 4px; height: 4px;
+  background: var(--c);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--c);
+  flex-shrink: 0;
+}
+ 
+/* Clip-path panels */
+#panel-left {
+  top: 50%; left: 30px;
+  transform: translateY(-50%);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+#panel-right {
+  top: 50%; right: 30px;
+  transform: translateY(-50%);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+}
+ 
+/* Stat rows */
+.stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px; font-size: 11px;
+}
+.stat-label { color: rgba(0,212,255,0.45); letter-spacing: 0.15em; }
+.stat-val {
+  font-family: var(--font); font-weight: 600; font-size: 12px;
+  color: var(--c); text-shadow: var(--glow2);
+}
+.stat-val.warn { color: var(--amber); text-shadow: 0 0 8px rgba(255,170,0,0.6); }
+.stat-val.ok { color: var(--green); text-shadow: 0 0 8px rgba(0,255,136,0.6); }
+ 
+/* Bar graph */
+.bar-graph { margin-top: 10px; height: 60px; display: flex; align-items: flex-end; gap: 3px; }
+.bg-bar {
+  flex: 1; min-height: 2px; max-height: 100%;
+  background: var(--c); opacity: 0.7;
+  transition: height 0.05s ease;
+  border-radius: 1px 1px 0 0;
+  box-shadow: 0 0 4px var(--c);
+}
+ 
+/* Line graph */
+.line-graph { margin-top: 10px; height: 60px; position: relative; }
+.line-graph svg { width:100%; height:100%; }
+ 
+/* Progress bars */
+.prog-wrap { margin-top: 6px; margin-bottom: 8px; }
+.prog-label-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
+.prog-label { color: rgba(0,212,255,0.45); letter-spacing: 0.1em; }
+.prog-num { font-family: var(--font); font-size: 10px; color: var(--c); }
+.prog-track {
+  height: 3px; background: rgba(0,212,255,0.1);
+  border-radius: 2px; overflow: hidden; position: relative;
+}
+.prog-fill {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--c2), var(--c));
+  box-shadow: 0 0 6px var(--c);
+  transition: width 0.5s ease;
+  position: relative;
+}
+.prog-fill::after {
+  content: '';
+  position: absolute; right: 0; top: -2px;
+  width: 4px; height: 7px; background: #fff;
+  border-radius: 1px; opacity: 0.8;
+}
+ 
+/* ====== TOP STATUS BAR ====== */
+#topbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 50;
+  display: flex; align-items: center;
+  padding: 0 60px;
+  background: linear-gradient(180deg, rgba(0,18,36,0.9) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(0,212,255,0.08);
+  gap: 24px;
+}
+.topbar-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: 0.2em;
+  color: rgba(0,212,255,0.5);
+}
+.topbar-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: blink 2s ease-in-out infinite;
+}
+.topbar-dot.warn { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+@keyframes blink {
+  0%,100% { opacity:1; } 50% { opacity:0.3; }
+}
+.topbar-divider { flex:1; height:1px; background: linear-gradient(90deg, rgba(0,212,255,0.0), rgba(0,212,255,0.12), rgba(0,212,255,0.0)); }
+ 
+/* ====== BOTTOM TRANSCRIPT ====== */
+#transcript-wrap {
+  position: absolute; bottom: 40px; z-index: 50;
+  left: 50%; transform: translateX(-50%);
+  width: clamp(300px, 45vw, 600px);
+  text-align: center;
+}
+#transcript {
+  font-size: clamp(13px, 1.4vw, 16px);
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 20px rgba(0,212,255,0.6);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.4;
+}
+.transcript-bar {
+  width: 60%; margin: 8px auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c), transparent);
+  opacity: 0.4;
+}
+ 
+/* ====== MINI STATUS INDICATORS ====== */
+.mini-status {
+  position: absolute; z-index: 50;
+  display: flex; flex-direction: column; gap: 6px;
+}
+#status-tl { top: 70px; left: 50px; }
+#status-tr { top: 70px; right: 50px; text-align: right; }
+ 
+.mini-item {
+  font-size: 9px; letter-spacing: 0.25em;
+  color: rgba(0,212,255,0.35);
+  display: flex; align-items: center; gap: 6px;
+}
+.mini-item::before {
+  content: '▸';
+  color: var(--c); font-size: 8px;
+  opacity: 0.6;
+}
+#status-tr .mini-item { flex-direction: row-reverse; }
+#status-tr .mini-item::before { transform: scaleX(-1); }
+ 
+/* ====== HOLOGRAM OVERLAY ====== */
+#hologram-overlay {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0,4,12,0.96);
+  backdrop-filter: blur(12px);
+  display: none; opacity: 0;
+  transition: opacity 0.5s ease;
+  align-items: center; justify-content: center;
+}
+#hologram-overlay.shown { display: flex; }
+#hologram-canvas { position: absolute; inset: 0; cursor: move; }
+.holo-controls {
+  position: absolute; bottom: 60px; left: 50%;
+  transform: translateX(-50%);
+  text-align: center; z-index: 10;
+}
+.holo-status {
+  font-family: var(--font);
+  font-size: 11px; letter-spacing: 0.35em;
+  color: rgba(0,212,255,0.7);
+  margin-bottom: 6px;
+}
+.holo-hint { font-size: 9px; color: rgba(0,212,255,0.3); letter-spacing: 0.2em; margin-bottom: 18px; }
+.holo-shape-btns { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; }
+.holo-btn, .holo-close {
+  background: transparent; border: 1px solid rgba(0,212,255,0.35);
+  color: var(--c); font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.2em;
+  padding: 8px 20px; cursor: pointer;
+  transition: all 0.25s; text-transform: uppercase;
+}
+.holo-btn:hover, .holo-close:hover {
+  background: rgba(0,212,255,0.1);
+  border-color: var(--c);
+  box-shadow: var(--glow);
+}
+.holo-close { padding: 10px 36px; font-family: var(--font); font-size: 12px; font-weight: 600; }
+ 
+/* ====== SPEAKING / THINKING STATES ====== */
+.speaking #core-canvas {
+  filter: drop-shadow(0 0 40px rgba(0,212,255,1)) drop-shadow(0 0 80px rgba(0,212,255,0.5));
+}
+.thinking #core-canvas {
+  filter: drop-shadow(0 0 30px rgba(255,58,58,0.8)) drop-shadow(0 0 60px rgba(255,58,58,0.4));
+}
+ 
+/* ====== ARC REACTOR PULSE RINGS ====== */
+.pulse-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--c);
+  opacity: 0;
+  pointer-events: none;
+  animation: pulseRing 3s ease-out infinite;
+}
+.pulse-ring:nth-child(2) { animation-delay: 1s; }
+.pulse-ring:nth-child(3) { animation-delay: 2s; }
+@keyframes pulseRing {
+  0% { transform: scale(0.4); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+ 
+/* ====== TARGETING BRACKETS ====== */
+.target-bracket {
+  position: absolute; z-index: 35;
+  pointer-events: none; opacity: 0;
+  animation: fadeTarget 4s ease-in-out infinite;
+}
+@keyframes fadeTarget {
+  0%, 100% { opacity:0; }
+  20%, 80% { opacity: 0.35; }
+}
+ 
+/* ====== RADAR BLIP PANEL ====== */
+#radar-panel {
+  position: absolute;
+  bottom: 100px; right: 50px;
+  z-index: 40;
+  width: 160px; height: 160px;
+}
+.radar-label {
+  font-family: var(--font);
+  font-size: 8px; letter-spacing: 0.3em;
+  color: rgba(0,212,255,0.4);
+  text-align: center; margin-bottom: 6px;
+}
+ 
+/* ====== RESPONSIVE ====== */
+@media (max-width: 900px) {
+  #panel-left, #panel-right { display: none; }
+  #status-tl, #status-tr { display: none; }
+  #radar-panel { display: none; }
+}
 </style>
 </head>
 <body>
-
-<canvas id="quantum-canvas"></canvas>
-<div class="chip-texture"></div>
-
-<div id="start-overlay">
-    <button class="start-btn" onclick="initSystem()">INITIALIZE SYSTEM</button>
+ 
+<!-- ====== BOOT SCREEN ====== -->
+<div id="boot">
+  <div class="boot-logo">J.A.R.V.I.S</div>
+  <div class="boot-sub">Just A Rather Very Intelligent System — Mark VII</div>
+  <div class="boot-bar-wrap"><div class="boot-bar" id="bootBar"></div></div>
+  <div class="boot-status" id="bootStatus">INITIALIZING...</div>
+  <button class="boot-btn" id="bootBtn" onclick="launchHUD()">ENGAGE SYSTEM</button>
 </div>
-
-<div id="hologram-overlay">
-    <canvas id="hologram-canvas"></canvas>
-    <div class="holo-controls">
-        <div class="holo-status" id="holoStatus">TOPOLOGY: SPHERE</div>
-        <div style="margin-bottom: 15px; font-size: 10px; color: #aaa;">DRAG TO ROTATE | COMMANDS: "RED", "BLUE", "CUBE"</div>
-        <button class="close-holo-btn" onclick="closeHologram()">CLOSE PROJECTION</button>
+ 
+<!-- ====== HOLOGRAM OVERLAY ====== -->
+<div id="hologram-overlay" id="hologram-overlay">
+  <canvas id="hologram-canvas"></canvas>
+  <div class="holo-controls">
+    <div class="holo-status" id="holoStatus">TOPOLOGY: SPHERE</div>
+    <div class="holo-hint">DRAG TO ROTATE · VOICE: "CUBE" / "HELIX" / "RED" / "BLUE"</div>
+    <div class="holo-shape-btns">
+      <button class="holo-btn" onclick="setShape('sphere')">SPHERE</button>
+      <button class="holo-btn" onclick="setShape('cube')">CUBE</button>
+      <button class="holo-btn" onclick="setShape('helix')">HELIX</button>
+      <button class="holo-btn" onclick="setShape('torus')">TORUS</button>
     </div>
+    <button class="holo-close" onclick="closeHologram()">CLOSE PROJECTION</button>
+  </div>
 </div>
-
-<div id="main-interface">
-    <div class="beam-line beam-top"></div>
-    <div class="beam-line beam-right"></div>
-    <div class="beam-line beam-bottom"></div>
-    <div class="beam-line beam-left"></div>
-
-    <div id="live-clock">
-        <div id="clock-time">00:00:00</div>
-        <span>BAREILLY, IN</span>
+ 
+<!-- ====== MAIN HUD ====== -->
+<div id="hud">
+  <canvas id="bg-canvas"></canvas>
+  <canvas id="radar-canvas"></canvas>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+ 
+  <!-- Frame -->
+  <div class="frame">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <div class="sweep-h"></div>
+    <div class="sweep-v"></div>
+  </div>
+ 
+  <!-- Top Bar -->
+  <div id="topbar">
+    <div class="topbar-item"><div class="topbar-dot"></div>SYSTEM ONLINE</div>
+    <div class="topbar-item"><div class="topbar-dot"></div>AI CORE: ACTIVE</div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-item" style="font-family:var(--font);font-size:11px;letter-spacing:0.35em;color:rgba(0,212,255,0.7);">J.A.R.V.I.S — MARK VII</div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-item"><div class="topbar-dot warn"></div>VOICE: SCANNING</div>
+    <div class="topbar-item"><div class="topbar-dot"></div>SHIELDS: 100%</div>
+  </div>
+ 
+  <!-- Profile -->
+  <div id="profile">
+    <img src="https://ui-avatars.com/api/?name=T+S&background=002244&color=00d4ff&size=64&rounded=true&bold=true" class="profile-avatar" alt="">
+    <div>
+      <div class="profile-name">COMMANDER</div>
+      <div class="profile-role">CLEARANCE: ALPHA-7</div>
     </div>
-
-    <div id="hud-frame"></div>
-
-    <div class="profile-container">
-        <div class="username">COMMANDER</div>
-        <img src="https://ui-avatars.com/api/?name=Stark&background=00f3ff&color=000&size=64&rounded=true&font-size=0.4" class="profile-img" alt="Profile">
+  </div>
+ 
+  <!-- Status TL -->
+  <div class="mini-status" id="status-tl">
+    <div class="mini-item">REACTOR OUTPUT: 3.2 GW</div>
+    <div class="mini-item">THREAT LEVEL: MINIMAL</div>
+    <div class="mini-item">UPLINK: SECURE</div>
+    <div class="mini-item">STARK TOWER: CONNECTED</div>
+  </div>
+ 
+  <!-- Status TR -->
+  <div class="mini-status" id="status-tr">
+    <div class="mini-item">SUIT INTEGRITY: 98%</div>
+    <div class="mini-item">WEAPONS: STANDBY</div>
+    <div class="mini-item">COMMS: ENCRYPTED</div>
+    <div class="mini-item" id="tr-weather">ENV: LOADING...</div>
+  </div>
+ 
+  <!-- Left Panel -->
+  <div class="panel" id="panel-left">
+    <div class="panel-title">SYS DIAGNOSTIC</div>
+    <div class="prog-wrap">
+      <div class="prog-label-row"><span class="prog-label">CPU CORE</span><span class="prog-num" id="cpuVal">--</span></div>
+      <div class="prog-track"><div class="prog-fill" id="cpuBar" style="width:0%"></div></div>
     </div>
-
-    <div class="core-container" onclick="openHologram()">
-        <div class="ring-ticks"></div>
-        <div class="ring-segmented"></div>
-        <div class="ring-inner"></div>
-        <div class="reactor" id="reactorCore">
-            <svg class="reactor-svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#00f3ff" stroke-width="1" />
-                <path d="M50 5 L50 20 M50 80 L50 95 M5 50 L20 50 M80 50 L95 50" stroke="#00f3ff" stroke-width="2" />
-                <circle cx="50" cy="50" r="25" fill="none" stroke="#00f3ff" stroke-width="2" stroke-dasharray="5,5" />
-            </svg>
-            <div class="reactor-glow"></div>
-        </div>
+    <div class="prog-wrap">
+      <div class="prog-label-row"><span class="prog-label">MEMORY</span><span class="prog-num" id="memVal">--</span></div>
+      <div class="prog-track"><div class="prog-fill" id="memBar" style="width:0%"></div></div>
     </div>
-
-    <div class="panel left">
-        <h3>SYS DIAGNOSTIC</h3>
-        <div class="stat-row"><span>CPU</span><span id="cpuVal">45%</span></div>
-        <div class="stat-row"><span>RAM</span><span id="memVal">4021 MB</span></div>
-        <div class="graph-box"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline id="lineChart" points="0,100 100,100"></polyline></svg></div>
+    <div class="prog-wrap">
+      <div class="prog-label-row"><span class="prog-label">NETWORK</span><span class="prog-num" id="netVal">--</span></div>
+      <div class="prog-track"><div class="prog-fill" id="netBar" style="width:0%"></div></div>
     </div>
-
-    <div class="panel right">
-        <h3>ENV METRICS</h3>
-        <div class="stat-row"><span>TEMP</span><span id="weather-temp">SCANNING...</span></div>
-        <div class="stat-row"><span>WIND</span><span id="weather-wind">...</span></div>
-        <div class="graph-box bar-box" id="visualizer-container"></div>
+    <div class="panel-title" style="margin-top:12px;">CPU WAVEFORM</div>
+    <div class="line-graph">
+      <svg viewBox="0 0 100 60" preserveAspectRatio="none">
+        <polyline id="lineChart" points="0,60" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+        <polyline id="lineChartFill" points="0,60 0,60 100,60" fill="rgba(0,212,255,0.08)" stroke="none"/>
+      </svg>
     </div>
-
-    <div id="transcript">System Standby</div>
-    <div class="footer">JARVIS SYSTEM ONLINE</div>
+    <div class="panel-title" style="margin-top:12px;">AUDIO SPECTRUM</div>
+    <div class="bar-graph" id="visualizer-container"></div>
+  </div>
+ 
+  <!-- Right Panel -->
+  <div class="panel" id="panel-right">
+    <div class="panel-title">ENV METRICS</div>
+    <div class="stat-row">
+      <span class="stat-label">TEMPERATURE</span>
+      <span class="stat-val" id="weather-temp">--</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">WIND SPEED</span>
+      <span class="stat-val" id="weather-wind">--</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">LOCATION</span>
+      <span class="stat-val" style="font-size:9px;letter-spacing:0.1em">MEERUT, IN</span>
+    </div>
+ 
+    <div class="panel-title" style="margin-top:12px;">ACTIVE TARGETS</div>
+    <div id="target-list">
+      <div class="stat-row"><span class="stat-label">TGT-001</span><span class="stat-val ok">LOCKED</span></div>
+      <div class="stat-row"><span class="stat-label">TGT-002</span><span class="stat-val warn">TRACKING</span></div>
+      <div class="stat-row"><span class="stat-label">TGT-003</span><span class="stat-val" style="color:rgba(0,212,255,0.4)">SCANNING</span></div>
+    </div>
+ 
+    <div class="panel-title" style="margin-top:12px;">POWER CELLS</div>
+    <div class="prog-wrap">
+      <div class="prog-label-row"><span class="prog-label">REPULSOR L</span><span class="prog-num">87%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:87%"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label-row"><span class="prog-label">REPULSOR R</span><span class="prog-num">91%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:91%"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label-row"><span class="prog-label">UNIBEAM</span><span class="prog-num">100%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+ 
+  <!-- Center Core -->
+  <div id="core-wrap">
+    <div class="pulse-ring" style="width:400px;height:400px;top:-200px;left:-200px;"></div>
+    <div class="pulse-ring" style="width:400px;height:400px;top:-200px;left:-200px;"></div>
+    <div class="pulse-ring" style="width:400px;height:400px;top:-200px;left:-200px;"></div>
+    <canvas id="core-canvas" width="420" height="420" onclick="openHologram()"></canvas>
+  </div>
+ 
+  <!-- Radar mini panel -->
+  <div id="radar-panel">
+    <div class="radar-label">PERIMETER SCAN</div>
+    <canvas id="miniRadar" width="160" height="160"></canvas>
+  </div>
+ 
+  <!-- Clock -->
+  <div id="clock-block">
+    <div id="clock-time">00:00:00</div>
+    <div id="clock-date">LOADING DATE...</div>
+  </div>
+ 
+  <!-- Transcript -->
+  <div id="transcript-wrap">
+    <div id="transcript">SYSTEM STANDBY</div>
+    <div class="transcript-bar"></div>
+  </div>
+ 
 </div>
-
+ 
 <script>
-    function initSystem() {
-        const overlay = document.getElementById('start-overlay');
-        overlay.style.opacity = '0';
-        overlay.style.pointerEvents = 'none';
-        
-        document.getElementById('main-interface').classList.add('interface-active');
-        
-        speak("System Initialized.");
-        startVoiceEngine();
-        initParticles(); 
-        animateBg();
-        updateGraph();
-        initWeather(); 
-        initAudioVisualizer(); 
-        
-        setTimeout(() => { overlay.style.display = 'none'; }, 1500);
+/* ==================== BOOT SEQUENCE ==================== */
+const bootMessages = [
+  "LOADING KERNEL MODULES...",
+  "INITIALIZING NEURAL CORE...",
+  "CALIBRATING SENSOR ARRAY...",
+  "ESTABLISHING SECURE UPLINK...",
+  "RUNNING SELF-DIAGNOSTICS...",
+  "LOADING AI LANGUAGE MODEL...",
+  "WARMING ARC REACTOR...",
+  "SYSTEM READY."
+];
+let bootIdx = 0;
+const bootBar = document.getElementById('bootBar');
+const bootStatus = document.getElementById('bootStatus');
+const bootBtn = document.getElementById('bootBtn');
+ 
+function runBoot() {
+  if(bootIdx >= bootMessages.length) {
+    bootBtn.style.display = 'block';
+    gsap.to(bootBtn, { opacity:1, duration:0.5, ease:'power2.out', from:{opacity:0} });
+    return;
+  }
+  bootStatus.textContent = bootMessages[bootIdx];
+  const pct = Math.round((bootIdx+1)/bootMessages.length * 100);
+  bootBar.style.width = pct + '%';
+  bootIdx++;
+  setTimeout(runBoot, 380 + Math.random()*280);
+}
+setTimeout(runBoot, 600);
+ 
+function launchHUD() {
+  const boot = document.getElementById('boot');
+  const hud = document.getElementById('hud');
+  boot.style.opacity = '0';
+  boot.style.pointerEvents = 'none';
+  setTimeout(() => boot.style.display = 'none', 1800);
+ 
+  hud.classList.add('live');
+ 
+  initBgCanvas();
+  initCoreCanvas();
+  initMiniRadar();
+  startClock();
+  initWeather();
+  initAudioVisualizer();
+  updateSysStats();
+  startVoiceEngine();
+  speak("Good morning, Commander. All systems are online.");
+}
+ 
+/* ==================== CLOCK ==================== */
+function startClock() {
+  function tick() {
+    const now = new Date();
+    document.getElementById('clock-time').textContent =
+      now.toLocaleTimeString('en-US', {hour12:false});
+    document.getElementById('clock-date').textContent =
+      now.toLocaleDateString('en-US', {weekday:'short', year:'numeric', month:'short', day:'numeric'}).toUpperCase();
+  }
+  tick(); setInterval(tick, 1000);
+}
+ 
+/* ==================== WEATHER ==================== */
+function initWeather() {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=28.984&longitude=77.706&current_weather=true')
+    .then(r=>r.json()).then(d=>{
+      const t = d.current_weather.temperature;
+      const w = d.current_weather.windspeed;
+      document.getElementById('weather-temp').textContent = t + '°C';
+      document.getElementById('weather-wind').textContent = w + ' km/h';
+      document.getElementById('tr-weather').textContent = 'TEMP: ' + t + '°C · WIND: ' + w + 'KM/H';
+    }).catch(()=>{
+      document.getElementById('weather-temp').textContent = 'N/A';
+    });
+}
+ 
+/* ==================== AUDIO VISUALIZER ==================== */
+let audioCtx, analyser, dataArray;
+function initAudioVisualizer() {
+  const container = document.getElementById('visualizer-container');
+  for(let i=0;i<20;i++){
+    const b = document.createElement('div');
+    b.className = 'bg-bar';
+    b.style.height = '5%';
+    container.appendChild(b);
+  }
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(stream => {
+      audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 64;
+      audioCtx.createMediaStreamSource(stream).connect(analyser);
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      renderViz();
+    }).catch(()=>{});
+}
+function renderViz() {
+  requestAnimationFrame(renderViz);
+  if(!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+  const bars = document.querySelectorAll('.bg-bar');
+  bars.forEach((b,i) => {
+    let v = (dataArray[i]||0)/255*100;
+    if(v<4) v = 2 + Math.random()*4;
+    b.style.height = v+'%';
+    b.style.opacity = 0.4 + v/100*0.5;
+  });
+}
+ 
+/* ==================== SYS STATS ==================== */
+let dataPoints = new Array(40).fill(45);
+function updateSysStats() {
+  let cpu = dataPoints[dataPoints.length-1] + (Math.random()-0.5)*18;
+  cpu = Math.max(10, Math.min(95, cpu));
+  dataPoints.shift(); dataPoints.push(cpu);
+ 
+  const cpuRound = Math.round(cpu);
+  document.getElementById('cpuVal').textContent = cpuRound + '%';
+  document.getElementById('cpuBar').style.width = cpuRound + '%';
+ 
+  const mem = 3800 + Math.round(Math.random()*500);
+  document.getElementById('memVal').textContent = mem + 'MB';
+  document.getElementById('memBar').style.width = Math.min(100, mem/8192*100).toFixed(0) + '%';
+ 
+  const net = Math.round(Math.random()*100);
+  document.getElementById('netVal').textContent = net + ' Mb/s';
+  document.getElementById('netBar').style.width = net + '%';
+ 
+  // Line chart
+  const pts = dataPoints.map((v,i)=>`${(i/39)*100},${60-v*0.6}`).join(' ');
+  const fillPts = `0,60 ` + pts + ` 100,60`;
+  document.getElementById('lineChart').setAttribute('points', pts);
+  document.getElementById('lineChartFill').setAttribute('points', fillPts);
+ 
+  setTimeout(updateSysStats, 120);
+}
+ 
+/* ==================== BG CANVAS (Particle Field) ==================== */
+function initBgCanvas() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+ 
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize); resize();
+ 
+  // Hexagonal grid dots + floating particles
+  particles = [];
+  for(let i=0;i<80;i++) {
+    particles.push({
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.4,
+      vy: (Math.random()-0.5)*0.4,
+      r: 0.8 + Math.random()*1.2,
+      opacity: 0.2 + Math.random()*0.4
+    });
+  }
+ 
+  // Hex grid
+  function drawHexGrid() {
+    const size = 40;
+    const cols = Math.ceil(W / (size*1.732)) + 2;
+    const rows = Math.ceil(H / (size*1.5)) + 2;
+    ctx.strokeStyle = 'rgba(0,212,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for(let r=0;r<rows;r++) {
+      for(let c=0;c<cols;c++) {
+        const x = c * size * 1.732 + (r%2 ? size*0.866 : 0) - size;
+        const y = r * size * 1.5 - size;
+        drawHex(ctx, x, y, size);
+      }
     }
-
-    // === CLOCK ===
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock-time').innerText = now.toLocaleTimeString('en-US', { hour12: false });
+  }
+ 
+  function drawHex(ctx, cx, cy, s) {
+    ctx.beginPath();
+    for(let i=0;i<6;i++) {
+      const a = (Math.PI/3)*i - Math.PI/6;
+      const px = cx + s*Math.cos(a), py = cy + s*Math.sin(a);
+      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
     }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    /* ================= WEATHER API (BAREILLY) ================= */
-    function initWeather() {
-        const lat = 28.3670;
-        const lon = 79.4304;
-        
-        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
-            .then(response => response.json())
-            .then(data => {
-                const temp = data.current_weather.temperature;
-                const wind = data.current_weather.windspeed;
-                document.getElementById('weather-temp').innerText = temp + "°C";
-                document.getElementById('weather-wind').innerText = wind + " km/h";
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById('weather-temp').innerText = "ERR";
-            });
-    }
-
-    /* ================= MUSIC VISUALIZER ================= */
-    let audioCtx, analyser, dataArray, bufferLength;
-    function initAudioVisualizer() {
-        const container = document.getElementById('visualizer-container');
-        for (let i = 0; i < 16; i++) {
-            const bar = document.createElement('div');
-            bar.className = 'bar';
-            container.appendChild(bar);
+    ctx.closePath(); ctx.stroke();
+  }
+ 
+  function animate() {
+    ctx.clearRect(0,0,W,H);
+ 
+    // Subtle hex grid
+    drawHexGrid();
+ 
+    // Particles + connections
+    particles.forEach((p,i) => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+ 
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(0,212,255,${p.opacity})`;
+      ctx.shadowBlur = 6; ctx.shadowColor = '#00d4ff';
+      ctx.fill(); ctx.shadowBlur = 0;
+ 
+      for(let j=i+1;j<particles.length;j++) {
+        const dx=p.x-particles[j].x, dy=p.y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<180) {
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y); ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle = `rgba(0,212,255,${0.08*(1-dist/180)})`;
+          ctx.lineWidth=0.5; ctx.stroke();
         }
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioCtx.createAnalyser();
-                const source = audioCtx.createMediaStreamSource(stream);
-                source.connect(analyser);
-                analyser.fftSize = 64; 
-                bufferLength = analyser.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
-                renderVisualizer();
-            })
-            .catch(err => console.log("Mic Error for Visualizer: " + err));
+      }
+    });
+ 
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+ 
+/* ==================== CORE CANVAS (Arc Reactor) ==================== */
+function initCoreCanvas() {
+  const canvas = document.getElementById('core-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 420, H = 420, cx = W/2, cy = H/2;
+  let t = 0;
+ 
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    t += 0.012;
+ 
+    const coreState = document.getElementById('core-wrap').className;
+    const isSpeaking = coreState.includes('speaking');
+    const isThinking = coreState.includes('thinking');
+    const color = isThinking ? '#ff3a3a' : '#00d4ff';
+    const color2 = isThinking ? 'rgba(255,58,58,' : 'rgba(0,212,255,';
+ 
+    // === OUTER RINGS ===
+    // Ring 1 - dashed slow
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(t*0.3);
+    ctx.strokeStyle = color2+'0.15)'; ctx.lineWidth=1;
+    ctx.setLineDash([4,8]);
+    ctx.beginPath(); ctx.arc(0,0,195,0,Math.PI*2); ctx.stroke();
+    ctx.restore();
+ 
+    // Ring 2 - segmented fast
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(-t*0.8);
+    const segs = 24;
+    for(let i=0;i<segs;i++) {
+      const a1 = (i/segs)*Math.PI*2;
+      const a2 = ((i+0.7)/segs)*Math.PI*2;
+      const alpha = 0.15 + 0.35*(Math.sin(t*2 + i*0.4)*0.5+0.5);
+      ctx.strokeStyle = color2+alpha+')';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(0,0,175,a1,a2); ctx.stroke();
     }
-
-    function renderVisualizer() {
-        requestAnimationFrame(renderVisualizer);
-        if (!analyser) return;
-
-        analyser.getByteFrequencyData(dataArray);
-        const bars = document.querySelectorAll('.bar');
-        
-        for (let i = 0; i < bars.length; i++) {
-            let val = dataArray[i]; 
-            let percent = (val / 255) * 100;
-            if (percent < 5) percent = 5; 
-            bars[i].style.height = percent + "%";
-            if(percent > 80) bars[i].style.background = "#fff";
-            else bars[i].style.background = "var(--cyan)";
-        }
+    ctx.restore();
+ 
+    // Ring 3 - medium
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(t*0.5);
+    ctx.strokeStyle = color2+'0.2)'; ctx.lineWidth=1.5;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.arc(0,0,155,0,Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+ 
+    // Tick marks on outer ring
+    for(let i=0;i<60;i++) {
+      const a = (i/60)*Math.PI*2 + t*0.15;
+      const len = i%5===0 ? 10 : 5;
+      const alpha = i%5===0 ? 0.5 : 0.2;
+      const r1 = 190; const r2 = r1-len;
+      ctx.strokeStyle = color2+alpha+')';
+      ctx.lineWidth=1;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(cx+r1*Math.cos(a), cy+r1*Math.sin(a));
+      ctx.lineTo(cx+r2*Math.cos(a), cy+r2*Math.sin(a));
+      ctx.stroke();
     }
-
-    /* ================= VOICE AI COMMANDS ================= */
-    let recognition; 
-    let isJarvisActive = false;
-    const reactor = document.getElementById('reactorCore');
-    const transcriptDiv = document.getElementById('transcript');
-
-    function startVoiceEngine() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!SpeechRecognition) return;
-        recognition = new SpeechRecognition(); recognition.continuous = true; recognition.lang = 'en-US'; recognition.interimResults = false;
-        recognition.onstart = () => { transcriptDiv.innerText = "Listening..."; isJarvisActive = true; };
-        recognition.onend = () => { if(isJarvisActive) recognition.start(); };
-        recognition.onresult = (e) => {
-            const cmd = e.results[e.results.length-1][0].transcript.toLowerCase().trim();
-            transcriptDiv.innerText = `>> "${cmd}"`;
-            processCommand(cmd);
-        };
-        recognition.start();
+ 
+    // Ring 4 - inner rotating
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(-t*1.2);
+    ctx.strokeStyle = color2+'0.35)'; ctx.lineWidth=2;
+    ctx.setLineDash([12,6]);
+    ctx.beginPath(); ctx.arc(0,0,130,0,Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+ 
+    // === TRIANGULAR ELEMENTS ===
+    const triR = 110;
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(t*0.6);
+    ctx.strokeStyle = color2+'0.25)'; ctx.lineWidth=1;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    for(let i=0;i<3;i++){
+      const a = (i/3)*Math.PI*2;
+      const bx=triR*Math.cos(a), by=triR*Math.sin(a);
+      i===0?ctx.moveTo(bx,by):ctx.lineTo(bx,by);
     }
-
-    // === COMMAND PROCESSOR ===
-    async function processCommand(cmd) {
-        window.speechSynthesis.cancel();
-        
-        // --- APP OPENING LOGIC ---
-        if(cmd.includes("open spotify")) {
-            speak("Opening Spotify.");
-            window.open("https://open.spotify.com", "_blank");
-            return;
-        }
-        if(cmd.includes("open whatsapp")) {
-            speak("Opening WhatsApp.");
-            window.open("https://web.whatsapp.com", "_blank");
-            return;
-        }
-        if(cmd.includes("open youtube")) {
-            speak("Opening YouTube.");
-            window.open("https://www.youtube.com", "_blank");
-            return;
-        }
-        if(cmd.includes("open instagram")) {
-            speak("Opening Instagram.");
-            window.open("https://www.instagram.com", "_blank");
-            return;
-        }
-        if(cmd.includes("open calculator")) {
-            speak("Opening Calculator.");
-            window.open("https://www.google.com/search?q=calculator", "_blank");
-            return;
-        }
-        // General Search (e.g. "Search for Iron Man")
-        if(cmd.startsWith("search for")) {
-            const query = cmd.replace("search for", "").trim();
-            speak("Searching for " + query);
-            window.open(`https://www.google.com/search?q=${query}`, "_blank");
-            return;
-        }
-
-        // --- EXISTING COMMANDS ---
-        if(cmd.includes("time")) { speak("It is " + new Date().toLocaleTimeString()); return; }
-        if(cmd.includes("open hologram")) { openHologram(); return; }
-        if(cmd.includes("close hologram")) { closeHologram(); return; }
-        if(cmd.includes("sphere")) { setShape('sphere'); return; }
-        if(cmd.includes("cube")) { setShape('cube'); return; }
-        if(cmd.includes("helix")) { setShape('helix'); return; }
-        if(cmd.includes("red")) { holoColor = "255, 0, 0"; speak("Color set to Red."); return; }
-        if(cmd.includes("blue") || cmd.includes("cyan")) { holoColor = "0, 243, 255"; speak("Color set to Cyan."); return; }
-        if(cmd.includes("green")) { holoColor = "0, 255, 0"; speak("Color set to Green."); return; }
-
-        // --- AI BRAIN (Puter.js) ---
-        reactor.className = "reactor thinking";
-        
-        if (typeof puter !== 'undefined') {
-            try {
-                const response = await puter.ai.chat(`You are JARVIS. Answer in ONE short sentence. Maximum 15 words. No markdown. User: ${cmd}`);
-                speak(response?.message?.content || response);
-            } catch(e) {
-                speak("I cannot connect to the cloud.");
-                reactor.className = "reactor";
-            }
-        } else {
-            speak("Offline mode active.");
-            reactor.className = "reactor";
-        }
+    ctx.closePath(); ctx.stroke();
+    ctx.restore();
+ 
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(-t*0.6 + Math.PI/3);
+    ctx.strokeStyle = color2+'0.2)'; ctx.lineWidth=1;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    for(let i=0;i<3;i++){
+      const a = (i/3)*Math.PI*2;
+      const bx=triR*Math.cos(a)*0.85, by=triR*Math.sin(a)*0.85;
+      i===0?ctx.moveTo(bx,by):ctx.lineTo(bx,by);
     }
-
-    function speak(text) {
-        reactor.className = "reactor speaking"; 
-        transcriptDiv.innerText = text;
-        const u = new SpeechSynthesisUtterance(text);
-        const v = window.speechSynthesis.getVoices().find(v => v.name.includes("Male") || v.name.includes("Google US English"));
-        if(v) u.voice = v;
-        u.onend = () => reactor.className = "reactor";
-        window.speechSynthesis.speak(u);
+    ctx.closePath(); ctx.stroke();
+    ctx.restore();
+ 
+    // === INNER HEXAGON ===
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(t*0.4);
+    ctx.strokeStyle = color2+'0.4)'; ctx.lineWidth=1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    for(let i=0;i<6;i++){
+      const a = (i/6)*Math.PI*2;
+      const bx=80*Math.cos(a), by=80*Math.sin(a);
+      i===0?ctx.moveTo(bx,by):ctx.lineTo(bx,by);
     }
-
-    /* ================= 3D HOLOGRAM ================= */
-    const holoCanvas = document.getElementById('hologram-canvas');
-    const holoCtx = holoCanvas.getContext('2d');
-    const holoOverlay = document.getElementById('hologram-overlay');
-    const holoStatus = document.getElementById('holoStatus');
-    let holoActive = false; 
-    let particles3D = []; 
-    let rotation = { x: 0, y: 0 };
-    let targetRotation = { x: 0, y: 0 };
-    let isDragging = false;
-    let lastMouse = { x: 0, y: 0 };
-    let holoColor = "0, 243, 255"; 
-    
-    class Point3D {
-        constructor() { this.x=0;this.y=0;this.z=0; this.tx=0;this.ty=0;this.tz=0; this.setSphere(); this.x=this.tx;this.y=this.ty;this.z=this.tz; }
-        setSphere() { const t=Math.random()*Math.PI*2, p=Math.acos((Math.random()*2)-1), r=220; this.tx=r*Math.sin(p)*Math.cos(t); this.ty=r*Math.sin(p)*Math.sin(t); this.tz=r*Math.cos(p); }
-        setCube() { const s=160; this.tx=(Math.random()-0.5)*2*s; this.ty=(Math.random()-0.5)*2*s; this.tz=(Math.random()-0.5)*2*s; }
-        setHelix() { const i = Math.random() * 20; const t = i * 0.5 + Math.PI * (Math.random() > 0.5 ? 0 : 1); const r = 100; this.tx = r * Math.cos(t * 5); this.ty = (i - 10) * 30; this.tz = r * Math.sin(t * 5); }
-        update() { this.x+=(this.tx-this.x)*0.05; this.y+=(this.ty-this.y)*0.05; this.z+=(this.tz-this.z)*0.05; }
+    ctx.closePath(); ctx.stroke();
+    ctx.restore();
+ 
+    // === SPINNING BLADES ===
+    const blades = 8;
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(t*2);
+    for(let i=0;i<blades;i++){
+      const a = (i/blades)*Math.PI*2;
+      const alpha = 0.1+0.3*(Math.sin(t*3+i)*0.5+0.5);
+      ctx.strokeStyle = color2+alpha+')'; ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.lineTo(65*Math.cos(a), 65*Math.sin(a));
+      ctx.stroke();
     }
-
-    function setShape(type) {
-        if(!holoActive) openHologram();
-        particles3D.forEach(p => { if(type==='cube') p.setCube(); else if(type==='helix') p.setHelix(); else p.setSphere(); });
-        holoStatus.innerText = "TOPOLOGY: " + type.toUpperCase();
-        speak("Morphing topology.");
+    ctx.restore();
+ 
+    // === CORE GLOW ===
+    const coreR = isSpeaking ? 30+6*Math.sin(t*8) : isThinking ? 25+5*Math.sin(t*12) : 24+4*Math.sin(t*2);
+    const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,coreR*3);
+    if(isThinking){
+      grad.addColorStop(0,'rgba(255,100,100,0.9)');
+      grad.addColorStop(0.3,'rgba(255,58,58,0.5)');
+      grad.addColorStop(1,'rgba(255,58,58,0)');
+    } else {
+      grad.addColorStop(0,'rgba(255,255,255,0.95)');
+      grad.addColorStop(0.2,'rgba(120,240,255,0.7)');
+      grad.addColorStop(0.5,'rgba(0,212,255,0.3)');
+      grad.addColorStop(1,'rgba(0,212,255,0)');
     }
-
-    function initHologram() {
-        holoCanvas.width=window.innerWidth; holoCanvas.height=window.innerHeight; particles3D=[];
-        for(let i=0; i<400; i++) particles3D.push(new Point3D());
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(cx,cy,coreR*3,0,Math.PI*2); ctx.fill();
+ 
+    // Core dot
+    ctx.beginPath(); ctx.arc(cx,cy,coreR,0,Math.PI*2);
+    ctx.fillStyle = isThinking?'#ff6060':'#ffffff'; ctx.fill();
+ 
+    // Inner ring around core
+    ctx.strokeStyle = color2+'0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(cx,cy,coreR+8,0,Math.PI*2); ctx.stroke();
+ 
+    // === DATA READOUTS on ring ===
+    ctx.font = '8px "Share Tech Mono"';
+    ctx.fillStyle = color2+'0.35)';
+    ctx.textAlign = 'center';
+    const labels = ['SYS','AI','NET','PWR','SNS','COM'];
+    labels.forEach((l,i)=>{
+      const a = (i/6)*Math.PI*2 - t*0.2;
+      ctx.fillText(l, cx+145*Math.cos(a), cy+145*Math.sin(a)+3);
+    });
+ 
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+ 
+/* ==================== MINI RADAR ==================== */
+function initMiniRadar() {
+  const canvas = document.getElementById('miniRadar');
+  const ctx = canvas.getContext('2d');
+  const W=160, H=160, cx=80, cy=80;
+  let angle=0;
+  const blips = Array.from({length:8},()=>({
+    a: Math.random()*Math.PI*2,
+    r: 20+Math.random()*50,
+    opacity: 0
+  }));
+ 
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    angle += 0.03;
+ 
+    // Background
+    ctx.fillStyle='rgba(0,12,24,0.8)';
+    ctx.beginPath(); ctx.arc(cx,cy,76,0,Math.PI*2); ctx.fill();
+ 
+    // Rings
+    [20,40,60,76].forEach(r=>{
+      ctx.strokeStyle='rgba(0,212,255,0.12)'; ctx.lineWidth=0.5;
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+    });
+ 
+    // Cross hairs
+    ctx.strokeStyle='rgba(0,212,255,0.1)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(4,cy); ctx.lineTo(156,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,4); ctx.lineTo(cx,156); ctx.stroke();
+ 
+    // Sweep
+    const sweepGrad = ctx.createConicalGradient ? null : null;
+    ctx.save(); ctx.translate(cx,cy);
+    const sg = ctx.createLinearGradient(-76,0,76,0);
+    sg.addColorStop(0,'rgba(0,212,255,0)');
+    sg.addColorStop(1,'rgba(0,212,255,0.35)');
+    ctx.rotate(angle);
+    ctx.fillStyle=sg;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.arc(0,0,76,-Math.PI/6,0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+ 
+    // Sweep line
+    ctx.save(); ctx.translate(cx,cy);
+    ctx.rotate(angle);
+    ctx.strokeStyle='rgba(0,212,255,0.7)'; ctx.lineWidth=1;
+    ctx.shadowColor='#00d4ff'; ctx.shadowBlur=4;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(76,0); ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.restore();
+ 
+    // Blips
+    blips.forEach(b=>{
+      const diff = ((b.a - angle) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+      if(diff < 0.15) b.opacity=1;
+      b.opacity *= 0.985;
+      if(b.opacity > 0.05) {
+        const bx = cx + b.r*Math.cos(b.a);
+        const by = cy + b.r*Math.sin(b.a);
+        ctx.beginPath(); ctx.arc(bx,by,2.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,255,136,${b.opacity})`;
+        ctx.shadowColor='#00ff88'; ctx.shadowBlur=6;
+        ctx.fill(); ctx.shadowBlur=0;
+      }
+    });
+ 
+    // Border
+    ctx.strokeStyle='rgba(0,212,255,0.3)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(cx,cy,76,0,Math.PI*2); ctx.stroke();
+ 
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+ 
+/* ==================== VOICE AI ==================== */
+let recognition;
+const coreWrap = document.getElementById('core-wrap');
+const transcriptDiv = document.getElementById('transcript');
+ 
+function startVoiceEngine() {
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR) return;
+  recognition = new SR();
+  recognition.continuous = true; recognition.lang='en-US'; recognition.interimResults=false;
+  recognition.onresult = e => {
+    const cmd = e.results[e.results.length-1][0].transcript.toLowerCase().trim();
+    transcriptDiv.textContent = `» ${cmd}`;
+    processCommand(cmd);
+  };
+  recognition.onend = () => recognition.start();
+  recognition.start();
+}
+ 
+async function processCommand(cmd) {
+  window.speechSynthesis.cancel();
+ 
+  const appMap = {
+    'spotify': 'https://open.spotify.com',
+    'whatsapp': 'https://web.whatsapp.com',
+    'youtube': 'https://www.youtube.com',
+    'instagram': 'https://www.instagram.com',
+    'gmail': 'https://mail.google.com',
+    'twitter': 'https://twitter.com',
+    'maps': 'https://maps.google.com',
+    'calculator': 'https://www.google.com/search?q=calculator'
+  };
+ 
+  for(const [k,v] of Object.entries(appMap)) {
+    if(cmd.includes('open '+k) || cmd.includes('launch '+k)) {
+      speak(`Launching ${k}.`); window.open(v,'_blank'); return;
     }
-
-    function animateHologram() {
-        if(!holoActive) return;
-        holoCtx.clearRect(0,0,holoCanvas.width,holoCanvas.height);
-        const cx=holoCanvas.width/2, cy=holoCanvas.height/2;
-        if(!isDragging) targetRotation.y += 0.005;
-        rotation.x += (targetRotation.x - rotation.x) * 0.1; rotation.y += (targetRotation.y - rotation.y) * 0.1;
-        let projected = [];
-        particles3D.forEach(p => {
-            p.update();
-            let x1 = p.x*Math.cos(rotation.y) - p.z*Math.sin(rotation.y);
-            let z1 = p.z*Math.cos(rotation.y) + p.x*Math.sin(rotation.y);
-            let y1 = p.y*Math.cos(rotation.x) - z1*Math.sin(rotation.x);
-            let z2 = z1*Math.cos(rotation.x) + p.y*Math.sin(rotation.x);
-            let scale = 400/(400+z2);
-            projected.push({x:cx+x1*scale, y:cy+y1*scale, z:z2, s:scale});
-        });
-        holoCtx.lineWidth = 0.5;
-        for (let i = 0; i < projected.length; i++) {
-            let p1 = projected[i];
-            if(p1.s < 0.2) continue;
-            holoCtx.beginPath(); holoCtx.fillStyle = `rgba(${holoColor},${p1.s})`; holoCtx.arc(p1.x, p1.y, 2*p1.s, 0, Math.PI*2); holoCtx.fill();
-            for (let j = i + 1; j < projected.length; j++) {
-                let p2 = projected[j];
-                let dx = p1.x - p2.x; let dy = p1.y - p2.y; let dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist < 40 * p1.s) { holoCtx.beginPath(); holoCtx.strokeStyle = `rgba(${holoColor},${0.3 * p1.s})`; holoCtx.moveTo(p1.x, p1.y); holoCtx.lineTo(p2.x, p2.y); holoCtx.stroke(); }
-            }
-        }
-        requestAnimationFrame(animateHologram);
+  }
+ 
+  if(cmd.includes('open hologram') || cmd.includes('hologram')) { openHologram(); return; }
+  if(cmd.includes('close hologram')) { closeHologram(); return; }
+  if(cmd.includes('sphere')) { setShape('sphere'); return; }
+  if(cmd.includes('cube')) { setShape('cube'); return; }
+  if(cmd.includes('helix')) { setShape('helix'); return; }
+  if(cmd.includes('torus')) { setShape('torus'); return; }
+  if(cmd.includes('red')) { holoColor='255,58,58'; speak('Color set to red.'); return; }
+  if(cmd.includes('blue')||cmd.includes('cyan')) { holoColor='0,212,255'; speak('Color set to cyan.'); return; }
+  if(cmd.includes('green')) { holoColor='0,255,136'; speak('Color set to green.'); return; }
+  if(cmd.includes('what time')) { speak('It is '+new Date().toLocaleTimeString()); return; }
+ 
+  if(cmd.startsWith('search for')||cmd.startsWith('search ')) {
+    const q = cmd.replace(/^search(?: for)?/,'').trim();
+    speak('Searching for '+q); window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, '_blank'); return;
+  }
+ 
+  // AI brain
+  coreWrap.className = 'thinking';
+  try {
+    if(typeof puter !== 'undefined') {
+      const r = await puter.ai.chat(
+        `You are J.A.R.V.I.S, Tony Stark's AI assistant. Reply in one sharp sentence, max 15 words. No markdown. User said: ${cmd}`
+      );
+      speak(r?.message?.content || r);
+    } else { speak('Cloud link offline. Standing by.'); }
+  } catch(e) { speak('Connection disrupted.'); coreWrap.className=''; }
+}
+ 
+function speak(text) {
+  coreWrap.className = 'speaking';
+  transcriptDiv.textContent = text;
+  const u = new SpeechSynthesisUtterance(text);
+  u.pitch = 0.85; u.rate = 1.0;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.name.includes('Daniel')||v.name.includes('Google UK')||v.name.includes('Male'));
+  if(v) u.voice = v;
+  u.onend = () => { coreWrap.className=''; };
+  window.speechSynthesis.speak(u);
+}
+ 
+/* ==================== HOLOGRAM 3D ==================== */
+const holoCanvas = document.getElementById('hologram-canvas');
+const holoCtx = holoCanvas.getContext('2d');
+const holoOverlay = document.getElementById('hologram-overlay');
+let holoActive = false;
+let pts3D = [], rot={x:0,y:0}, rotTarget={x:0,y:0};
+let isDrag=false, lastM={x:0,y:0};
+let holoColor = '0,212,255';
+let currentShape = 'sphere';
+ 
+class Pt {
+  constructor(){this.x=this.tx=0;this.y=this.ty=0;this.z=this.tz=0;this.toSphere();}
+  toSphere(){const t=Math.random()*Math.PI*2,p=Math.acos(Math.random()*2-1),r=240;this.tx=r*Math.sin(p)*Math.cos(t);this.ty=r*Math.sin(p)*Math.sin(t);this.tz=r*Math.cos(p);}
+  toCube(){const s=160;this.tx=(Math.random()-0.5)*2*s;this.ty=(Math.random()-0.5)*2*s;this.tz=(Math.random()-0.5)*2*s;}
+  toHelix(){const i=Math.random()*20;const t=i*0.6+(Math.random()>0.5?0:Math.PI);const r=110;this.tx=r*Math.cos(t*5);this.ty=(i-10)*32;this.tz=r*Math.sin(t*5);}
+  toTorus(){const u=Math.random()*Math.PI*2,v=Math.random()*Math.PI*2,R=150,r=60;this.tx=(R+r*Math.cos(v))*Math.cos(u);this.ty=(R+r*Math.cos(v))*Math.sin(u);this.tz=r*Math.sin(v);}
+  update(){const s=0.06;this.x+=(this.tx-this.x)*s;this.y+=(this.ty-this.y)*s;this.z+=(this.tz-this.z)*s;}
+}
+ 
+function setShape(type) {
+  currentShape=type;
+  if(!holoActive) openHologram();
+  pts3D.forEach(p=>{
+    if(type==='cube') p.toCube();
+    else if(type==='helix') p.toHelix();
+    else if(type==='torus') p.toTorus();
+    else p.toSphere();
+  });
+  document.getElementById('holoStatus').textContent='TOPOLOGY: '+type.toUpperCase();
+  speak('Morphing to '+type+' topology.');
+}
+ 
+function initHologram() {
+  holoCanvas.width=window.innerWidth; holoCanvas.height=window.innerHeight;
+  pts3D=[];
+  for(let i=0;i<600;i++){const p=new Pt();if(currentShape==='cube')p.toCube();else if(currentShape==='helix')p.toHelix();else if(currentShape==='torus')p.toTorus();pts3D.push(p);}
+}
+ 
+function animateHologram() {
+  if(!holoActive) return;
+  const W=holoCanvas.width, H=holoCanvas.height;
+  holoCtx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2;
+ 
+  if(!isDrag) rotTarget.y += 0.007;
+  rot.x += (rotTarget.x-rot.x)*0.08;
+  rot.y += (rotTarget.y-rot.y)*0.08;
+ 
+  const projected=[];
+  pts3D.forEach(p=>{
+    p.update();
+    const cosY=Math.cos(rot.y),sinY=Math.sin(rot.y);
+    const cosX=Math.cos(rot.x),sinX=Math.sin(rot.x);
+    const x1=p.x*cosY-p.z*sinY;
+    const z1=p.z*cosY+p.x*sinY;
+    const y1=p.y*cosX-z1*sinX;
+    const z2=z1*cosX+p.y*sinX;
+    const scale=500/(500+z2);
+    projected.push({x:cx+x1*scale,y:cy+y1*scale,z:z2,s:scale});
+  });
+ 
+  projected.sort((a,b)=>a.z-b.z);
+ 
+  // Draw connections
+  holoCtx.lineWidth=0.4;
+  for(let i=0;i<projected.length;i++){
+    const p1=projected[i];
+    for(let j=i+1;j<projected.length;j++){
+      const p2=projected[j];
+      const dx=p1.x-p2.x,dy=p1.y-p2.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<35*p1.s){
+        const alpha=0.25*p1.s*(1-d/(35*p1.s));
+        holoCtx.strokeStyle=`rgba(${holoColor},${alpha})`;
+        holoCtx.beginPath();holoCtx.moveTo(p1.x,p1.y);holoCtx.lineTo(p2.x,p2.y);holoCtx.stroke();
+      }
     }
-
-    holoCanvas.addEventListener('mousedown', e => { isDragging=true; lastMouse={x:e.clientX, y:e.clientY}; });
-    window.addEventListener('mouseup', () => isDragging=false );
-    window.addEventListener('mousemove', e => { if(!isDragging) return; let dx = e.clientX - lastMouse.x; let dy = e.clientY - lastMouse.y; targetRotation.y += dx * 0.01; targetRotation.x += dy * 0.01; lastMouse = {x:e.clientX, y:e.clientY}; });
-    function openHologram() { initHologram(); holoActive=true; holoOverlay.style.display='flex'; setTimeout(()=>holoOverlay.style.opacity=1,10); animateHologram(); speak("Hologram Active"); }
-    function closeHologram() { holoOverlay.style.opacity=0; setTimeout(()=>{holoOverlay.style.display='none'; holoActive=false;},500); speak("Hologram Closed"); }
-
-    /* ================= BACKGROUND & GRAPHS ================= */
-    const canvas = document.getElementById('quantum-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height; let particles = [];
-    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resize); resize();
-    function initParticles() { particles=[]; for(let i=0; i<Math.floor((width*height)/15000); i++) particles.push({x:Math.random()*width, y:Math.random()*height, vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.5}); }
-    function animateBg() {
-        ctx.clearRect(0,0,width,height); ctx.strokeStyle='rgba(0,243,255,0.15)'; ctx.lineWidth=1;
-        particles.forEach((p, i) => {
-            p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>width)p.vx*=-1; if(p.y<0||p.y>height)p.vy*=-1;
-            ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI*2); ctx.fillStyle='#00f3ff'; ctx.fill();
-            for(let j=i+1; j<particles.length; j++) {
-                let dx=p.x-particles[j].x, dy=p.y-particles[j].y;
-                if(Math.sqrt(dx*dx+dy*dy)<150) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); }
-            }
-        });
-        requestAnimationFrame(animateBg);
-    }
-
-    const lineChart = document.getElementById('lineChart'); let dataPoints=new Array(30).fill(50);
-    function updateGraph() {
-        dataPoints.shift(); let v=dataPoints[dataPoints.length-1]+(Math.random()-0.5)*30; 
-        if(v<10)v=10; if(v>90)v=90; dataPoints.push(v);
-        lineChart.setAttribute("points", dataPoints.map((val,i)=>`${(i/29)*100},${100-val}`).join(" "));
-        document.getElementById("cpuVal").innerText=Math.round(v)+"%";
-        requestAnimationFrame(()=>setTimeout(updateGraph,50));
-    }
+  }
+ 
+  // Draw points
+  projected.forEach(p=>{
+    if(p.s<0.1) return;
+    const brightness=0.4+0.6*((p.z+300)/600);
+    holoCtx.beginPath();holoCtx.arc(p.x,p.y,1.8*p.s,0,Math.PI*2);
+    holoCtx.fillStyle=`rgba(${holoColor},${Math.min(1,brightness*p.s)})`;
+    holoCtx.shadowBlur=4;holoCtx.shadowColor=`rgba(${holoColor},0.5)`;
+    holoCtx.fill();holoCtx.shadowBlur=0;
+  });
+ 
+  requestAnimationFrame(animateHologram);
+}
+ 
+holoCanvas.addEventListener('mousedown',e=>{isDrag=true;lastM={x:e.clientX,y:e.clientY};});
+holoCanvas.addEventListener('touchstart',e=>{isDrag=true;lastM={x:e.touches[0].clientX,y:e.touches[0].clientY};});
+window.addEventListener('mouseup',()=>isDrag=false);
+window.addEventListener('touchend',()=>isDrag=false);
+window.addEventListener('mousemove',e=>{
+  if(!isDrag)return;
+  rotTarget.y+=(e.clientX-lastM.x)*0.008;
+  rotTarget.x+=(e.clientY-lastM.y)*0.008;
+  lastM={x:e.clientX,y:e.clientY};
+});
+window.addEventListener('touchmove',e=>{
+  if(!isDrag)return;
+  rotTarget.y+=(e.touches[0].clientX-lastM.x)*0.008;
+  rotTarget.x+=(e.touches[0].clientY-lastM.y)*0.008;
+  lastM={x:e.touches[0].clientX,y:e.touches[0].clientY};
+});
+ 
+function openHologram() {
+  initHologram(); holoActive=true;
+  holoOverlay.classList.add('shown');
+  setTimeout(()=>holoOverlay.style.opacity=1,10);
+  animateHologram();
+  speak('Holographic projection active.');
+}
+function closeHologram() {
+  holoOverlay.style.opacity=0;
+  setTimeout(()=>{holoOverlay.style.display='none';holoOverlay.classList.remove('shown');holoActive=false;},500);
+  speak('Projection closed.');
+}
 </script>
 </body>
 </html>
